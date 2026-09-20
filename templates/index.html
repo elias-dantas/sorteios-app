@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Sorteios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Menu de Temas Dropdown -->
+        <div class="menu-tema-wrapper">
+            <button class="btn-tema-principal" id="btnMenuTema" onclick="toggleMenuTema(event)">
+                 Tema
+            </button>
+            <div class="dropdown-temas" id="dropdownMenuTema">
+                <button class="opcao-tema" data-tema="claro" onclick="mudarTema('claro')">☀️ Claro</button>
+                <button class="opcao-tema" data-tema="escuro" onclick="mudarTema('escuro')">🌙 Escuro</button>
+                <button class="opcao-tema" data-tema="sistema" onclick="mudarTema('sistema')">💻 Sistema</button>
+            </div>
+        </div>
+
+        <header>
+            <h1>🎲 Sistema de Sorteios</h1>
+            <p>Escolha o tipo de sorteio e configure os parâmetros</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tipo="numero" onclick="mudarTab('numero')"> Números</button>
+            <button class="tab-btn" data-tipo="nomes" onclick="mudarTab('nomes')">👥 Nomes</button>
+            <button class="tab-btn" data-tipo="cores" onclick="mudarTab('cores')">🎨 Cores</button>
+            <button class="tab-btn" data-tipo="dados" onclick="mudarTab('dados')"> Dados</button>
+            <button class="tab-btn" data-tipo="bingo" onclick="mudarTab('bingo')">🎱 Bingo</button>
+        </nav>
+
+        <div id="form-numero" class="form-container active">
+            <h2>Sorteio de Números</h2>
+            <div class="form-group">
+                <label for="minimo">Valor Mínimo:</label>
+                <input type="number" id="minimo" value="1" min="0">
+            </div>
+            <div class="form-group">
+                <label for="maximo">Valor Máximo:</label>
+                <input type="number" id="maximo" value="100" min="1">
+            </div>
+            <div class="form-group">
+                <label for="quantidade-num">Quantidade:</label>
+                <input type="number" id="quantidade-num" value="1" min="1">
+            </div>
+            <div class="form-group checkbox">
+                <input type="checkbox" id="permitir-repeticao-num">
+                <label for="permitir-repeticao-num">Permitir repetição</label>
+            </div>
+            <button class="btn-sortear" onclick="realizarSorteio('numero')">🎰 Sortear</button>
+        </div>
+
+        <div id="form-nomes" class="form-container">
+            <h2>Sorteio de Nomes</h2>
+            <div class="form-group">
+                <label for="nomes">Lista de Participantes:</label>
+                <textarea id="nomes" rows="8" placeholder="João - (11) 99999-9999&#10;Maria - (11) 88888-8888&#10;Pedro&#10;Ana - (11) 77777-7777"></textarea>
+                <small class="text-secondary">Formato: Nome - Telefone (opcional)</small>
+            </div>
+            <div class="form-group">
+                <label for="quantidade-nomes">Quantidade a sortear:</label>
+                <input type="number" id="quantidade-nomes" value="1" min="1">
+            </div>
+            <div class="form-group checkbox">
+                <input type="checkbox" id="permitir-repeticao-nomes">
+                <label for="permitir-repeticao-nomes">Permitir repetição</label>
+            </div>
+            <button class="btn-sortear" onclick="realizarSorteio('nomes')"> Sortear</button>
+        </div>
+
+        <div id="form-cores" class="form-container">
+            <h2>Sorteio de Cores</h2>
+            <div class="form-group">
+                <label for="modo-cores">Modo:</label>
+                <select id="modo-cores" onchange="toggleCoresCustom()">
+                    <option value="predefinidas">Cores Predefinidas</option>
+                    <option value="rgb">RGB Aleatório</option>
+                    <option value="custom">Cores Customizadas</option>
+                </select>
+            </div>
+            <div class="form-group" id="cores-custom-container" style="display: none;">
+                <label for="cores-custom">Cores Customizadas (uma por linha):</label>
+                <textarea id="cores-custom" rows="5" placeholder="#FF0000&#10;#00FF00&#10;#0000FF"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="quantidade-cores">Quantidade:</label>
+                <input type="number" id="quantidade-cores" value="1" min="1">
+            </div>
+            <button class="btn-sortear" onclick="realizarSorteio('cores')">🎨 Sortear</button>
+        </div>
+
+        <div id="form-dados" class="form-container">
+            <h2>Sorteio de Dados</h2>
+            <div class="form-group">
+                <label for="tipo-dado">Tipo de Dado:</label>
+                <select id="tipo-dado">
+                    <option value="d4">D4 (4 faces)</option>
+                    <option value="d6" selected>D6 (6 faces)</option>
+                    <option value="d8">D8 (8 faces)</option>
+                    <option value="d10">D10 (10 faces)</option>
+                    <option value="d12">D12 (12 faces)</option>
+                    <option value="d20">D20 (20 faces)</option>
+                    <option value="d100">D100 (100 faces)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="quantidade-dados">Quantidade de Dados:</label>
+                <input type="number" id="quantidade-dados" value="1" min="1" max="10">
+            </div>
+            <button class="btn-sortear" onclick="realizarSorteio('dados')">🎲 Rolar Dados</button>
+        </div>
+
+        <div id="form-bingo" class="form-container">
+            <h2>🎱 Bingo</h2>
+            
+            <div class="bingo-controls">
+                <div class="form-group-inline">
+                    <label for="qtd-cartelas">Qtd. Folhas:</label>
+                    <input type="number" id="qtd-cartelas" value="1" min="1" max="10">
+                    <button class="btn-bingo" onclick="gerarEImprimirCartelas()">🎫 Gerar Cartelas</button>
+                </div>
+                <button class="btn-bingo" id="btnIniciarBingo" onclick="iniciarBingo()">▶️ Iniciar Bingo</button>
+                <button class="btn-bingo" id="btnSortearBingo" onclick="sortearNumeroBingo()" disabled> Sortear Número</button>
+                <button class="btn-bingo" onclick="reiniciarBingo()">🔄 Reiniciar</button>
+            </div>
+            
+            <!-- Globo tradicional de bingo estilo grade metálica -->
+            <div class="globo-bingo-container">
+                <div class="globo-bingo-tradicional" id="globoBingoTradicional">
+                    <div class="globo-grade-metálica">
+                        <div class="grade-meridiano"></div>
+                        <div class="grade-meridiano"></div>
+                        <div class="grade-meridiano"></div>
+                        <div class="grade-meridiano"></div>
+                        <div class="grade-meridiano"></div>
+                        <div class="grade-meridiano"></div>
+                        <div class="grade-paralelo"></div>
+                        <div class="grade-paralelo"></div>
+                        <div class="grade-paralelo"></div>
+                        <div class="grade-paralelo"></div>
+                    </div>
+                    <div class="globo-bola-sorteada" id="globoBolaSorteada">
+                        <span class="bola-numero" id="bolaNumeroDisplay">?</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="numero-atual-bingo" class="numero-atual-bingo">
+                <div class="letra-bingo" id="letraBingo">-</div>
+                <div class="numero-bingo" id="numeroBingo">-</div>
+            </div>
+            
+            <div class="bingo-info">
+                <p>Números sorteados: <span id="totalSorteados">0</span>/75</p>
+            </div>
+            
+            <!-- Quadro de números do bingo -->
+            <div class="quadro-numeros-bingo">
+                <h3>Quadro de Números</h3>
+                <div class="quadro-colunas">
+                    <div class="coluna-bingo">
+                        <div class="coluna-titulo">B</div>
+                        <div class="numeros-grid" id="numeros-B"></div>
+                    </div>
+                    <div class="coluna-bingo">
+                        <div class="coluna-titulo">I</div>
+                        <div class="numeros-grid" id="numeros-I"></div>
+                    </div>
+                    <div class="coluna-bingo">
+                        <div class="coluna-titulo">N</div>
+                        <div class="numeros-grid" id="numeros-N"></div>
+                    </div>
+                    <div class="coluna-bingo">
+                        <div class="coluna-titulo">G</div>
+                        <div class="numeros-grid" id="numeros-G"></div>
+                    </div>
+                    <div class="coluna-bingo">
+                        <div class="coluna-titulo">O</div>
+                        <div class="numeros-grid" id="numeros-O"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="resultado" class="resultado-container">
+            <div id="resultado-conteudo" class="resultado-conteudo">
+                <p class="placeholder">O resultado aparecerá aqui...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de impressão oculta -->
+    <div id="area-impressao" class="area-impressao"></div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

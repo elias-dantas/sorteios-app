@@ -1,0 +1,121 @@
+name: CI/CD - Sistema de Sorteios
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # ============================================
+  # JOB 1: TESTES
+  # ============================================
+  test:
+    name: 🧪 Testes
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      
+      - name: 📦 Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: ✅ Validar imports
+        run: |
+          python -c "
+          from sorteios.models import (
+              SorteioNumero, 
+              SorteioNomes, 
+              SorteioCores, 
+              SorteioDados, 
+              SorteioBingo
+          )
+          print('✅ Todos os imports OK')
+          "
+      
+      - name: 🧪 Testar lógica de sorteios
+        run: |
+          python -c "
+          from sorteios.models import SorteioNumero, SorteioBingo
+          
+          # Testar sorteio de números
+          s = SorteioNumero(1, 100, 5, False)
+          r = s.realizar_sorteio()
+          assert len(r.resultado) == 5
+          print('✅ Sorteio de números OK')
+          
+          # Testar bingo
+          b = SorteioBingo()
+          cartela = b.gerar_cartela()
+          assert len(cartela['B']) == 5
+          print('✅ Geração de cartela OK')
+          
+          print('🎉 Todos os testes passaram!')
+          "
+
+  # ============================================
+  # JOB 2: DEPLOY
+  # ============================================
+  deploy:
+    name: 🚀 Deploy em Produção
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name:  Checkout do código
+        uses: actions/checkout@v4
+      
+      - name:  Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            echo "🚀 Iniciando deploy..."
+            
+            # Navegar até o projeto
+            cd ${{ secrets.DEPLOY_PATH }}
+            
+            # Backup da versão atual
+            echo "📦 Criando backup..."
+            tar -czf /tmp/sorteios-backup-$(date +%Y%m%d-%H%M%S).tar.gz .
+            
+            # Atualizar código
+            echo "📥 Atualizando código..."
+            git pull origin main
+            
+            # Ativar ambiente virtual
+            echo "🐍 Ativando venv..."
+            source venv/bin/activate
+            
+            # Instalar dependências
+            echo "📦 Instalando dependências..."
+            pip install --upgrade pip
+            pip install -r requirements.txt
+            
+            # Reiniciar serviço
+            echo "🔄 Reiniciando serviço..."
+            sudo systemctl restart sorteios
+            
+            # Verificar status
+            echo "✅ Verificando status..."
+            sudo systemctl status sorteios --no-pager
+            
+            echo "🎉 Deploy concluído com sucesso!"
+            
+      - name: 📊 Notificar resultado
+        if: always()
+        run: |
+          echo "Deploy finalizado. Status: ${{ job.status }}"

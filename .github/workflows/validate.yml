@@ -1,0 +1,29 @@
+name: Validação de Código
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    name: 🔍 Lint e Formatação
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Instalar linters
+        run: |
+          pip install flake8 black
+      
+      - name: Verificar formatação com Black
+        run: |
+          black --check . || echo "️ Código não formatado"
+      
+      - name: Verificar com Flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || echo "️ Erros encontrados"

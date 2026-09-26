@@ -75,7 +75,6 @@ async function realizarSorteio(tipo) {
                     quantidade: parseInt(document.getElementById('quantidade-num').value),
                     permitir_repeticao: document.getElementById('permitir-repeticao-num').checked
                 };
-                // Animação de números rolando
                 await animarNumerosRolagem(resultadoDiv, dados.minimo, dados.maximo, 3000);
                 break;
                 
@@ -86,7 +85,6 @@ async function realizarSorteio(tipo) {
                     quantidade: parseInt(document.getElementById('quantidade-nomes').value),
                     permitir_repeticao: document.getElementById('permitir-repeticao-nomes').checked
                 };
-                // Animação de nomes rolando
                 await animarNomesRolagem(resultadoDiv, dados.nomes, 3000);
                 break;
                 
@@ -97,7 +95,6 @@ async function realizarSorteio(tipo) {
                     quantidade: parseInt(document.getElementById('quantidade-cores').value),
                     cores_custom: document.getElementById('cores-custom').value.split('\n').filter(c => c.trim())
                 };
-                // Animação de cores rolando
                 await animarCoresRolagem(resultadoDiv, dados.modo, 3000);
                 break;
                 
@@ -107,7 +104,6 @@ async function realizarSorteio(tipo) {
                     tipo_dado: document.getElementById('tipo-dado').value,
                     quantidade: parseInt(document.getElementById('quantidade-dados').value)
                 };
-                // Animação de dados girando
                 await animarDadosGirando(resultadoDiv, dados.quantidade, 3000);
                 break;
         }
@@ -140,7 +136,7 @@ function animarNumerosRolagem(container, min, max, duracao) {
             const agora = Date.now();
             if (agora - inicio < duracao) {
                 const numeroAleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
-                container.innerHTML = `<div class="resultado-numero animacao-selecao">${numeroAleatorio}</div>`;
+                container.innerHTML = `<div class="resultado-numero" style="animation: pulse 0.1s ease-in-out infinite;">${numeroAleatorio}</div>`;
                 requestAnimationFrame(atualizar);
             } else {
                 resolve();
@@ -150,7 +146,7 @@ function animarNumerosRolagem(container, min, max, duracao) {
     });
 }
 
-// ========== ANIMAÇÃO DE NOMES COM ROLAGEM (CORRIGIDA) ==========
+// ========== ANIMAÇÃO DE NOMES COM SPINNER ==========
 function animarNomesRolagem(container, nomesStr, duracao) {
     return new Promise(resolve => {
         const nomes = nomesStr.split('\n').filter(n => n.trim());
@@ -161,30 +157,18 @@ function animarNomesRolagem(container, nomesStr, duracao) {
             return; 
         }
         
-        const inicio = Date.now();
+        // Mostra o spinner
+        container.innerHTML = `
+            <div class="spinner-container">
+                <div class="spinner spinner-large"></div>
+                <div class="spinner-text">Sorteando nome...</div>
+            </div>
+        `;
         
-        function atualizar() {
-            const agora = Date.now();
-            const decorrido = agora - inicio;
-            
-            if (decorrido < duracao) {
-                const nomeAleatorio = nomes[Math.floor(Math.random() * nomes.length)];
-                const nomeExibicao = nomeAleatorio.split(' - ')[0].trim();
-                
-                // HTML idêntico ao resultado final, mas com classe de animação
-                container.innerHTML = `
-                    <div class="resultado-nome-item animacao-selecao">
-                        <div class="resultado-nome-texto">🎲 ${nomeExibicao}</div>
-                    </div>
-                `;
-                
-                requestAnimationFrame(atualizar);
-            } else {
-                resolve();
-            }
-        }
-        
-        atualizar();
+        // Aguarda a duração e resolve
+        setTimeout(() => {
+            resolve();
+        }, duracao);
     });
 }
 
@@ -206,7 +190,7 @@ function animarCoresRolagem(container, modo, duracao) {
                     corHex = getHexCor(corNome);
                 }
                 container.innerHTML = `
-                    <div class="resultado-cor animacao-selecao" style="background-color: ${corHex};"></div>
+                    <div class="resultado-cor" style="background-color: ${corHex}; animation: colorReveal 0.1s ease-in-out infinite;"></div>
                     <div class="cor-nome">${corNome}</div>
                 `;
                 requestAnimationFrame(atualizar);
@@ -486,17 +470,14 @@ async function sortearNumeroBingo() {
     const numeroBingo = document.getElementById('numeroBingo');
     const totalSorteados = document.getElementById('totalSorteados');
     
-    // Esconde a bola anterior e reinicia animação
     if (bolaSorteada) bolaSorteada.style.display = 'none';
     if (globoWrapper) globoWrapper.classList.remove('sorteado');
     
-    // Regenera bolas para efeito visual
     gerarBolasGlobo();
     
     if (btnSortear) btnSortear.disabled = true;
     
     try {
-        // Aguarda 3 segundos de animação
         await new Promise(resolve => setTimeout(resolve, 3000));
         
         const response = await fetch('/bingo/sortear', {
@@ -516,17 +497,14 @@ async function sortearNumeroBingo() {
             const numero = data.resultado.numero;
             const letra = data.resultado.letra;
             
-            // Para animação e mostra bola
             if (globoWrapper) globoWrapper.classList.add('sorteado');
             if (bolaNumero) bolaNumero.textContent = numero;
             if (bolaSorteada) bolaSorteada.style.display = 'flex';
             
-            // Atualiza display
             if (letraBingo) letraBingo.textContent = letra;
             if (numeroBingo) numeroBingo.textContent = numero;
             if (totalSorteados) totalSorteados.textContent = data.resultado.total_sorteados;
             
-            // Marca no quadro
             const numeroElement = document.getElementById(`num-${numero}`);
             if (numeroElement) {
                 numeroElement.classList.add('sorteado');
@@ -568,7 +546,6 @@ function reiniciarBingo() {
     if (bolaSorteada) bolaSorteada.style.display = 'none';
     if (globoWrapper) globoWrapper.classList.remove('sorteado');
     
-    // Regenerar bolas
     gerarBolasGlobo();
     
     ['B', 'I', 'N', 'G', 'O'].forEach(letra => {

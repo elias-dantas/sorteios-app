@@ -15,7 +15,7 @@
             </button>
             <div class="dropdown-temas" id="dropdownMenuTema">
                 <button class="opcao-tema" data-tema="claro" onclick="mudarTema('claro')">☀️ Claro</button>
-                <button class="opcao-tema" data-tema="escuro" onclick="mudarTema('escuro')">🌙 Escuro</button>
+                <button class="opcao-tema" data-tema="escuro" onclick="mudarTema('escuro')"> Escuro</button>
                 <button class="opcao-tema" data-tema="sistema" onclick="mudarTema('sistema')">💻 Sistema</button>
             </div>
         </div>
@@ -51,7 +51,7 @@
                 <input type="checkbox" id="permitir-repeticao-num">
                 <label for="permitir-repeticao-num">Permitir repetição</label>
             </div>
-            <button class="btn-sortear" onclick="realizarSorteio('numero')">🎰 Sortear</button>
+            <button class="btn-sortear" onclick="realizarSorteio('numero')"> Sortear</button>
         </div>
 
         <div id="form-nomes" class="form-container">
@@ -128,22 +128,33 @@
                 <button class="btn-bingo" onclick="reiniciarBingo()">🔄 Reiniciar</button>
             </div>
             
-            <!-- Globo tradicional de bingo estilo grade metálica -->
+            <!-- Globo de Bingo Animado CSS -->
             <div class="globo-bingo-container">
-                <div class="globo-bingo-tradicional" id="globoBingoTradicional">
-                    <div class="globo-grade-metálica">
-                        <div class="grade-meridiano"></div>
-                        <div class="grade-meridiano"></div>
-                        <div class="grade-meridiano"></div>
-                        <div class="grade-meridiano"></div>
-                        <div class="grade-meridiano"></div>
-                        <div class="grade-meridiano"></div>
-                        <div class="grade-paralelo"></div>
-                        <div class="grade-paralelo"></div>
-                        <div class="grade-paralelo"></div>
-                        <div class="grade-paralelo"></div>
+                <div class="globo-css-wrapper" id="globoWrapper">
+                    <!-- Esfera externa -->
+                    <div class="globo-esfera">
+                        <!-- Grade do globo -->
+                        <div class="globo-grade">
+                            <div class="grade-meridiano"></div>
+                            <div class="grade-meridiano"></div>
+                            <div class="grade-meridiano"></div>
+                            <div class="grade-meridiano"></div>
+                            <div class="grade-meridiano"></div>
+                            <div class="grade-meridiano"></div>
+                            <div class="grade-paralelo"></div>
+                            <div class="grade-paralelo"></div>
+                            <div class="grade-paralelo"></div>
+                            <div class="grade-paralelo"></div>
+                        </div>
+                        
+                        <!-- Bolas animadas girando -->
+                        <div class="bolas-container" id="bolasContainer">
+                            <!-- Bolas serão geradas via JavaScript -->
+                        </div>
                     </div>
-                    <div class="globo-bola-sorteada" id="globoBolaSorteada">
+                    
+                    <!-- Bola com número sorteado -->
+                    <div class="globo-bola-sorteada" id="globoBolaSorteada" style="display: none;">
                         <span class="bola-numero" id="bolaNumeroDisplay">?</span>
                     </div>
                 </div>

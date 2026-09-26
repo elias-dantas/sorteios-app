@@ -1,156 +1,116 @@
 // ========== GERENCIAMENTO DE TEMAS ==========
-function aplicarTema(tema) {
-    const body = document.body;
-    const botoes = document.querySelectorAll('.opcao-tema');
-    
-    body.classList.remove('tema-escuro');
-    
-    if (tema === 'escuro') {
-        body.classList.add('tema-escuro');
-    } else if (tema === 'sistema') {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            body.classList.add('tema-escuro');
-        }
+function toggleMenuTema(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('dropdownMenuTema');
+    dropdown.classList.toggle('visivel');
+}
+
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('dropdownMenuTema');
+    if (dropdown && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('visivel');
     }
-    
-    botoes.forEach(btn => {
+});
+
+function mudarTema(tema) {
+    document.body.className = '';
+    if (tema === 'escuro') {
+        document.body.classList.add('tema-escuro');
+    }
+    localStorage.setItem('tema', tema);
+    atualizarSelecaoTema(tema);
+    document.getElementById('dropdownMenuTema').classList.remove('visivel');
+}
+
+function atualizarSelecaoTema(tema) {
+    document.querySelectorAll('.opcao-tema').forEach(btn => {
         btn.classList.remove('selecionado');
         if (btn.dataset.tema === tema) {
             btn.classList.add('selecionado');
         }
     });
-    
-    localStorage.setItem('tema-preferido', tema);
 }
 
-function toggleMenuTema(event) {
-    if (event) event.stopPropagation();
-    const dropdown = document.getElementById('dropdownMenuTema');
-    if (dropdown) {
-        dropdown.classList.toggle('visivel');
+function carregarTema() {
+    const temaSalvo = localStorage.getItem('tema') || 'sistema';
+    if (temaSalvo === 'escuro') {
+        document.body.classList.add('tema-escuro');
+    } else if (temaSalvo === 'sistema') {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('tema-escuro');
+        }
     }
+    atualizarSelecaoTema(temaSalvo);
 }
-
-function mudarTema(tema) {
-    aplicarTema(tema);
-    const dropdown = document.getElementById('dropdownMenuTema');
-    if (dropdown) {
-        dropdown.classList.remove('visivel');
-    }
-}
-
-document.addEventListener('click', function() {
-    const dropdown = document.getElementById('dropdownMenuTema');
-    if (dropdown) {
-        dropdown.classList.remove('visivel');
-    }
-});
-
-// ========== INICIALIZAÇÃO ==========
-document.addEventListener('DOMContentLoaded', function() {
-    const temaSalvo = localStorage.getItem('tema-preferido') || 'sistema';
-    aplicarTema(temaSalvo);
-    
-    const modoCoresSelect = document.getElementById('modo-cores');
-    if (modoCoresSelect) {
-        modoCoresSelect.addEventListener('change', function(e) {
-            const container = document.getElementById('cores-custom-container');
-            if (container) {
-                container.style.display = e.target.value === 'custom' ? 'block' : 'none';
-            }
-        });
-    }
-    
-    if (window.matchMedia) {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
-            const temaAtual = localStorage.getItem('tema-preferido') || 'sistema';
-            if (temaAtual === 'sistema') {
-                aplicarTema('sistema');
-            }
-        });
-    }
-});
 
 // ========== GERENCIAMENTO DE TABS ==========
 function mudarTab(tipo) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
-    
-    const btnAtivo = document.querySelector(`.tab-btn[data-tipo="${tipo}"]`);
-    if (btnAtivo) btnAtivo.classList.add('active');
-    
-    const formAtivo = document.getElementById(`form-${tipo}`);
-    if (formAtivo) formAtivo.classList.add('active');
+    document.querySelector(`[data-tipo="${tipo}"]`).classList.add('active');
+    document.getElementById(`form-${tipo}`).classList.add('active');
 }
 
+// ========== TOGGLE CORES CUSTOM ==========
 function toggleCoresCustom() {
     const modo = document.getElementById('modo-cores').value;
     const container = document.getElementById('cores-custom-container');
-    if (container) {
-        container.style.display = modo === 'custom' ? 'block' : 'none';
-    }
+    container.style.display = modo === 'custom' ? 'block' : 'none';
 }
 
-// ========== FUNÇÃO PRINCIPAL DE SORTEIO ==========
+// ========== REALIZAR SORTEIO ==========
 async function realizarSorteio(tipo) {
     const resultadoDiv = document.getElementById('resultado-conteudo');
-    const btnSortear = document.querySelector(`.btn-sortear[onclick*="'${tipo}'"]`);
-    
-    if (!btnSortear) return;
-    
-    btnSortear.disabled = true;
-    const textoOriginal = btnSortear.textContent;
-    btnSortear.textContent = 'Sorteando...';
+    resultadoDiv.innerHTML = '<p class="placeholder">Sorteando...</p>';
     
     try {
-        let dados = {};
         let url = '';
+        let dados = {};
         
         switch(tipo) {
             case 'numero':
+                url = '/sortear/numero';
                 dados = {
                     minimo: parseInt(document.getElementById('minimo').value),
                     maximo: parseInt(document.getElementById('maximo').value),
                     quantidade: parseInt(document.getElementById('quantidade-num').value),
                     permitir_repeticao: document.getElementById('permitir-repeticao-num').checked
                 };
-                url = '/sortear/numero';
-                await animarNumeros(resultadoDiv, dados.minimo, dados.maximo, 3000);
                 break;
-                
             case 'nomes':
+                url = '/sortear/nomes';
                 dados = {
                     nomes: document.getElementById('nomes').value,
                     quantidade: parseInt(document.getElementById('quantidade-nomes').value),
                     permitir_repeticao: document.getElementById('permitir-repeticao-nomes').checked
                 };
-                url = '/sortear/nomes';
-                await animarNomesRolagem(resultadoDiv, dados.nomes, 3000);
                 break;
-                
             case 'cores':
+                url = '/sortear/cores';
                 dados = {
                     modo: document.getElementById('modo-cores').value,
-                    quantidade: parseInt(document.getElementById('quantidade-cores').value)
+                    quantidade: parseInt(document.getElementById('quantidade-cores').value),
+                    cores_custom: document.getElementById('cores-custom').value.split('\n').filter(c => c.trim())
                 };
-                if (dados.modo === 'custom') {
-                    dados.cores_custom = document.getElementById('cores-custom').value
-                        .split('\n')
-                        .map(cor => cor.trim())
-                        .filter(cor => cor);
-                }
-                url = '/sortear/cores';
-                await animarCores(resultadoDiv, dados.modo, 3000);
                 break;
-                
             case 'dados':
+                url = '/sortear/dados';
                 dados = {
                     tipo_dado: document.getElementById('tipo-dado').value,
                     quantidade: parseInt(document.getElementById('quantidade-dados').value)
                 };
-                url = '/sortear/dados';
-                await animarDadosGirando(resultadoDiv, dados.quantidade, 3000);
                 break;
+        }
+        
+        // Animação antes do resultado
+        if (tipo === 'numero') {
+            await animarNumerosRolagem(resultadoDiv, dados.minimo, dados.maximo, 3000);
+        } else if (tipo === 'nomes') {
+            await animarNomesRolagem(resultadoDiv, dados.nomes, 3000);
+        } else if (tipo === 'cores') {
+            await animarCores(resultadoDiv, dados.modo, 3000);
+        } else if (tipo === 'dados') {
+            await animarDadosGirando(resultadoDiv, dados.quantidade, 3000);
         }
         
         const response = await fetch(url, {
@@ -162,31 +122,26 @@ async function realizarSorteio(tipo) {
         const resultado = await response.json();
         
         if (resultado.erro) {
-            resultadoDiv.innerHTML = `<p style="color: red; font-size: 1.2em;">❌ ${resultado.erro}</p>`;
-            btnSortear.disabled = false;
-            btnSortear.textContent = textoOriginal;
+            resultadoDiv.innerHTML = `<p style="color: red;">Erro: ${resultado.erro}</p>`;
             return;
         }
         
         exibirResultado(resultado, tipo);
         
     } catch (error) {
-        resultadoDiv.innerHTML = `<p style="color: red; font-size: 1.2em;">❌ Erro ao realizar sorteio: ${error.message}</p>`;
-    } finally {
-        btnSortear.disabled = false;
-        btnSortear.textContent = textoOriginal;
+        resultadoDiv.innerHTML = `<p style="color: red;">Erro: ${error.message}</p>`;
     }
 }
 
 // ========== ANIMAÇÃO DE NÚMEROS ==========
-function animarNumeros(container, minimo, maximo, duracao) {
+function animarNumerosRolagem(container, min, max, duracao) {
     return new Promise(resolve => {
         const inicio = Date.now();
         function atualizar() {
             const agora = Date.now();
             if (agora - inicio < duracao) {
-                const num = Math.floor(Math.random() * (maximo - minimo + 1)) + minimo;
-                container.innerHTML = `<div class="resultado-numero animacao-selecao">${num}</div>`;
+                const numeroAleatorio = Math.floor(Math.random() * (max - min + 1)) + min;
+                container.innerHTML = `<div class="resultado-numero animacao-selecao">${numeroAleatorio}</div>`;
                 requestAnimationFrame(atualizar);
             } else {
                 resolve();
@@ -196,14 +151,11 @@ function animarNumeros(container, minimo, maximo, duracao) {
     });
 }
 
-// ========== ANIMAÇÃO DE NOMES COM ROLAGEM (CORRIGIDA) ==========
+// ========== ANIMAÇÃO DE NOMES ==========
 function animarNomesRolagem(container, nomesStr, duracao) {
     return new Promise(resolve => {
         const nomes = nomesStr.split('\n').filter(n => n.trim());
-        if (nomes.length === 0) { 
-            resolve(); 
-            return; 
-        }
+        if (nomes.length === 0) { resolve(); return; }
         
         const inicio = Date.now();
         
@@ -215,11 +167,10 @@ function animarNomesRolagem(container, nomesStr, duracao) {
                 const nomeAleatorio = nomes[Math.floor(Math.random() * nomes.length)];
                 const nomeExibicao = nomeAleatorio.split(' - ')[0].trim();
                 
-                // Mesma estrutura da animação de cores
                 container.innerHTML = `
                     <div class="resultado-nome-item animacao-selecao" style="animation: selecaoPiscando 0.1s ease-in-out infinite;">
                         <div class="resultado-nome-texto" style="font-size: 2em; color: var(--text-primary);">
-                            🎲 ${nomeExibicao}
+                             ${nomeExibicao}
                         </div>
                     </div>
                 `;
@@ -335,6 +286,41 @@ function exibirResultado(resultado, tipo) {
     resultadoDiv.innerHTML = html;
 }
 
+// ========== GLOBO DE BINGO - GERAR BOLAS ==========
+function gerarBolasGlobo() {
+    const container = document.getElementById('bolasContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    const cores = [
+        '#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3',
+        '#f38181', '#aa96da', '#fcbad3', '#a8d8ea',
+        '#ff9a9e', '#fecfef', '#a18cd1', '#fbc2eb'
+    ];
+    
+    for (let i = 0; i < 15; i++) {
+        const bola = document.createElement('div');
+        bola.className = 'bola-girando';
+        
+        const angulo = Math.random() * Math.PI * 2;
+        const raio = Math.random() * 90;
+        const x = 135 + raio * Math.cos(angulo);
+        const y = 135 + raio * Math.sin(angulo);
+        
+        const cor = cores[Math.floor(Math.random() * cores.length)];
+        const numero = Math.floor(Math.random() * 75) + 1;
+        
+        bola.style.left = x + 'px';
+        bola.style.top = y + 'px';
+        bola.style.background = `radial-gradient(circle at 30% 30%, ${cor}, ${cor}dd)`;
+        bola.style.animationDelay = `${Math.random() * 2}s`;
+        bola.textContent = numero;
+        
+        container.appendChild(bola);
+    }
+}
+
 // ========== LÓGICA DO BINGO ==========
 let bingoAtivo = false;
 let cartelasGeradas = [];
@@ -391,12 +377,10 @@ function prepararImpressao() {
             const cartela = cartelasGeradas[i];
             html += `<div class="cartela-bingo-impressao">`;
             
-            // Cabeçalho B-I-N-G-O
             ['B', 'I', 'N', 'G', 'O'].forEach(letra => {
                 html += `<div class="cartela-cabecalho">${letra}</div>`;
             });
             
-            // 5 linhas de números
             for (let row = 0; row < 5; row++) {
                 html += `<div class="cartela-celula">${cartela.B[row]}</div>`;
                 html += `<div class="cartela-celula">${cartela.I[row]}</div>`;
@@ -485,17 +469,25 @@ function inicializarQuadroNumeros() {
 async function sortearNumeroBingo() {
     if (!bingoAtivo) return;
     
-    const globo = document.getElementById('globoBingoTradicional');
-    const btnSortear = document.getElementById('btnSortearBingo');
+    const globoWrapper = document.getElementById('globoWrapper');
+    const bolaSorteada = document.getElementById('globoBolaSorteada');
     const bolaNumero = document.getElementById('bolaNumeroDisplay');
+    const btnSortear = document.getElementById('btnSortearBingo');
     const letraBingo = document.getElementById('letraBingo');
     const numeroBingo = document.getElementById('numeroBingo');
     const totalSorteados = document.getElementById('totalSorteados');
     
-    if (globo) globo.classList.add('girando');
+    // Esconde a bola anterior e reinicia animação
+    if (bolaSorteada) bolaSorteada.style.display = 'none';
+    if (globoWrapper) globoWrapper.classList.remove('sorteado');
+    
+    // Regenera bolas para efeito visual
+    gerarBolasGlobo();
+    
     if (btnSortear) btnSortear.disabled = true;
     
     try {
+        // Aguarda 3 segundos de animação
         await new Promise(resolve => setTimeout(resolve, 3000));
         
         const response = await fetch('/bingo/sortear', {
@@ -504,8 +496,6 @@ async function sortearNumeroBingo() {
         });
         
         const data = await response.json();
-        
-        if (globo) globo.classList.remove('girando');
         
         if (data.erro) { 
             alert(data.erro); 
@@ -517,11 +507,17 @@ async function sortearNumeroBingo() {
             const numero = data.resultado.numero;
             const letra = data.resultado.letra;
             
+            // Para animação e mostra bola
+            if (globoWrapper) globoWrapper.classList.add('sorteado');
             if (bolaNumero) bolaNumero.textContent = numero;
+            if (bolaSorteada) bolaSorteada.style.display = 'flex';
+            
+            // Atualiza display
             if (letraBingo) letraBingo.textContent = letra;
             if (numeroBingo) numeroBingo.textContent = numero;
             if (totalSorteados) totalSorteados.textContent = data.resultado.total_sorteados;
             
+            // Marca no quadro
             const numeroElement = document.getElementById(`num-${numero}`);
             if (numeroElement) {
                 numeroElement.classList.add('sorteado');
@@ -537,7 +533,6 @@ async function sortearNumeroBingo() {
             }
         }
     } catch (error) {
-        if (globo) globo.classList.remove('girando');
         if (btnSortear) btnSortear.disabled = false;
         alert('Erro ao sortear número: ' + error.message);
     }
@@ -552,7 +547,8 @@ function reiniciarBingo() {
     const letraBingo = document.getElementById('letraBingo');
     const numeroBingo = document.getElementById('numeroBingo');
     const bolaNumero = document.getElementById('bolaNumeroDisplay');
-    const globo = document.getElementById('globoBingoTradicional');
+    const bolaSorteada = document.getElementById('globoBolaSorteada');
+    const globoWrapper = document.getElementById('globoWrapper');
     
     if (btnIniciar) btnIniciar.disabled = false;
     if (btnSortear) btnSortear.disabled = true;
@@ -560,10 +556,20 @@ function reiniciarBingo() {
     if (letraBingo) letraBingo.textContent = '-';
     if (numeroBingo) numeroBingo.textContent = '-';
     if (bolaNumero) bolaNumero.textContent = '?';
-    if (globo) globo.classList.remove('girando');
+    if (bolaSorteada) bolaSorteada.style.display = 'none';
+    if (globoWrapper) globoWrapper.classList.remove('sorteado');
+    
+    // Regenerar bolas
+    gerarBolasGlobo();
     
     ['B', 'I', 'N', 'G', 'O'].forEach(letra => {
         const container = document.getElementById(`numeros-${letra}`);
         if (container) container.innerHTML = '';
     });
 }
+
+// ========== INICIALIZAÇÃO ==========
+document.addEventListener('DOMContentLoaded', function() {
+    carregarTema();
+    gerarBolasGlobo();
+});

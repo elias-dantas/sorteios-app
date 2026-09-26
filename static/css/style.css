@@ -469,44 +469,46 @@ header p {
     cursor: not-allowed;
 }
 
+/* ========== GLOBO DE BINGO ANIMADO CSS ========== */
 .globo-bingo-container {
     display: flex;
     justify-content: center;
     margin: 30px 0;
 }
 
-.globo-bingo-tradicional {
-    width: 280px;
-    height: 280px;
+.globo-css-wrapper {
     position: relative;
-    background: radial-gradient(circle at 30% 30%, #f8f9fa, #dee2e6);
+    width: 300px;
+    height: 300px;
+}
+
+.globo-esfera {
+    width: 100%;
+    height: 100%;
+    position: relative;
     border-radius: 50%;
-    border: 8px solid #c0c0c0;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), inset 0 -10px 30px rgba(0, 0, 0, 0.1);
+    background: radial-gradient(circle at 30% 30%, #ffffff, #e0e0e0, #999);
+    box-shadow: 
+        inset -20px -20px 50px rgba(0,0,0,0.3),
+        inset 10px 10px 30px rgba(255,255,255,0.5),
+        0 10px 40px rgba(0,0,0,0.3);
     overflow: hidden;
+    border: 8px solid #c0c0c0;
 }
 
-.globo-bingo-tradicional.girando {
-    animation: girarGloboTradicional 0.8s linear infinite;
-}
-
-@keyframes girarGloboTradicional {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.globo-grade-metálica {
+.globo-grade {
     position: absolute;
     width: 100%;
     height: 100%;
     border-radius: 50%;
     overflow: hidden;
+    z-index: 2;
 }
 
 .grade-meridiano {
     position: absolute;
-    height: 100%;
     width: 2px;
+    height: 100%;
     background: linear-gradient(to bottom, transparent, #888, transparent);
     left: 50%;
     transform-origin: center;
@@ -521,8 +523,8 @@ header p {
 
 .grade-paralelo {
     position: absolute;
-    width: 100%;
     height: 2px;
+    width: 100%;
     background: linear-gradient(to right, transparent, #888, transparent);
     top: 50%;
     transform-origin: center;
@@ -533,13 +535,53 @@ header p {
 .grade-paralelo:nth-child(9) { transform: translateY(-50%) rotate(60deg); }
 .grade-paralelo:nth-child(10) { transform: translateY(-50%) rotate(90deg); }
 
+.bolas-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    animation: girarGlobo 3s linear infinite;
+}
+
+.bola-girando {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff6b6b, #c92a2a);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7em;
+    font-weight: bold;
+    color: white;
+    animation: flutuar 2s ease-in-out infinite;
+}
+
+@keyframes girarGlobo {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes flutuar {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.globo-css-wrapper.sorteado .bolas-container {
+    animation-play-state: paused;
+    opacity: 0.3;
+}
+
 .globo-bola-sorteada {
     position: absolute;
     bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
     background: radial-gradient(circle at 30% 30%, #ff6b6b, #c92a2a);
     border-radius: 50%;
     display: flex;
@@ -548,6 +590,18 @@ header p {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
     z-index: 10;
     border: 3px solid #fff;
+    animation: bolaAparecer 0.5s ease;
+}
+
+@keyframes bolaAparecer {
+    0% {
+        transform: translateX(-50%) scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50%) scale(1) rotate(0deg);
+        opacity: 1;
+    }
 }
 
 .bola-numero {
@@ -785,14 +839,21 @@ header p {
         margin-bottom: 20px;
     }
     
-    .globo-bingo-tradicional {
-        width: 200px;
-        height: 200px;
+    .globo-css-wrapper {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .bola-girando {
+        width: 22px;
+        height: 22px;
+        font-size: 0.7em;
     }
     
     .globo-bola-sorteada {
         width: 70px;
         height: 70px;
+        bottom: 20px;
     }
     
     .bola-numero {

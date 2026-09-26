@@ -61,7 +61,6 @@ function toggleCoresCustom() {
 // ========== REALIZAR SORTEIO ==========
 async function realizarSorteio(tipo) {
     const resultadoDiv = document.getElementById('resultado-conteudo');
-    resultadoDiv.innerHTML = '<p class="placeholder">Sorteando...</p>';
     
     try {
         let url = '';
@@ -76,7 +75,10 @@ async function realizarSorteio(tipo) {
                     quantidade: parseInt(document.getElementById('quantidade-num').value),
                     permitir_repeticao: document.getElementById('permitir-repeticao-num').checked
                 };
+                // Animação de números rolando
+                await animarNumerosRolagem(resultadoDiv, dados.minimo, dados.maximo, 3000);
                 break;
+                
             case 'nomes':
                 url = '/sortear/nomes';
                 dados = {
@@ -84,7 +86,10 @@ async function realizarSorteio(tipo) {
                     quantidade: parseInt(document.getElementById('quantidade-nomes').value),
                     permitir_repeticao: document.getElementById('permitir-repeticao-nomes').checked
                 };
+                // Animação de nomes rolando
+                await animarNomesRolagem(resultadoDiv, dados.nomes, 3000);
                 break;
+                
             case 'cores':
                 url = '/sortear/cores';
                 dados = {
@@ -92,25 +97,19 @@ async function realizarSorteio(tipo) {
                     quantidade: parseInt(document.getElementById('quantidade-cores').value),
                     cores_custom: document.getElementById('cores-custom').value.split('\n').filter(c => c.trim())
                 };
+                // Animação de cores rolando
+                await animarCoresRolagem(resultadoDiv, dados.modo, 3000);
                 break;
+                
             case 'dados':
                 url = '/sortear/dados';
                 dados = {
                     tipo_dado: document.getElementById('tipo-dado').value,
                     quantidade: parseInt(document.getElementById('quantidade-dados').value)
                 };
+                // Animação de dados girando
+                await animarDadosGirando(resultadoDiv, dados.quantidade, 3000);
                 break;
-        }
-        
-        // Animação antes do resultado
-        if (tipo === 'numero') {
-            await animarNumerosRolagem(resultadoDiv, dados.minimo, dados.maximo, 3000);
-        } else if (tipo === 'nomes') {
-            await animarNomesRolagem(resultadoDiv, dados.nomes, 3000);
-        } else if (tipo === 'cores') {
-            await animarCores(resultadoDiv, dados.modo, 3000);
-        } else if (tipo === 'dados') {
-            await animarDadosGirando(resultadoDiv, dados.quantidade, 3000);
         }
         
         const response = await fetch(url, {
@@ -122,14 +121,14 @@ async function realizarSorteio(tipo) {
         const resultado = await response.json();
         
         if (resultado.erro) {
-            resultadoDiv.innerHTML = `<p style="color: red;">Erro: ${resultado.erro}</p>`;
+            resultadoDiv.innerHTML = `<p style="color: red; font-size: 1.2em;">Erro: ${resultado.erro}</p>`;
             return;
         }
         
         exibirResultado(resultado, tipo);
         
     } catch (error) {
-        resultadoDiv.innerHTML = `<p style="color: red;">Erro: ${error.message}</p>`;
+        resultadoDiv.innerHTML = `<p style="color: red; font-size: 1.2em;">Erro: ${error.message}</p>`;
     }
 }
 
@@ -151,11 +150,16 @@ function animarNumerosRolagem(container, min, max, duracao) {
     });
 }
 
-// ========== ANIMAÇÃO DE NOMES ==========
+// ========== ANIMAÇÃO DE NOMES COM ROLAGEM (CORRIGIDA) ==========
 function animarNomesRolagem(container, nomesStr, duracao) {
     return new Promise(resolve => {
         const nomes = nomesStr.split('\n').filter(n => n.trim());
-        if (nomes.length === 0) { resolve(); return; }
+        
+        if (nomes.length === 0) { 
+            container.innerHTML = '<p style="color: red; font-size: 1.2em;">Lista de nomes vazia!</p>';
+            resolve(); 
+            return; 
+        }
         
         const inicio = Date.now();
         
@@ -167,11 +171,10 @@ function animarNomesRolagem(container, nomesStr, duracao) {
                 const nomeAleatorio = nomes[Math.floor(Math.random() * nomes.length)];
                 const nomeExibicao = nomeAleatorio.split(' - ')[0].trim();
                 
+                // HTML idêntico ao resultado final, mas com classe de animação
                 container.innerHTML = `
-                    <div class="resultado-nome-item animacao-selecao" style="animation: selecaoPiscando 0.1s ease-in-out infinite;">
-                        <div class="resultado-nome-texto" style="font-size: 2em; color: var(--text-primary);">
-                             ${nomeExibicao}
-                        </div>
+                    <div class="resultado-nome-item animacao-selecao">
+                        <div class="resultado-nome-texto">🎲 ${nomeExibicao}</div>
                     </div>
                 `;
                 
@@ -186,10 +189,11 @@ function animarNomesRolagem(container, nomesStr, duracao) {
 }
 
 // ========== ANIMAÇÃO DE CORES ==========
-function animarCores(container, modo, duracao) {
+function animarCoresRolagem(container, modo, duracao) {
     return new Promise(resolve => {
         const coresPredefinidas = ["Vermelho", "Verde", "Azul", "Amarelo", "Roxo", "Laranja", "Rosa", "Ciano", "Magenta", "Marrom", "Preto", "Branco", "Cinza"];
         const inicio = Date.now();
+        
         function atualizar() {
             const agora = Date.now();
             if (agora - inicio < duracao) {
@@ -202,10 +206,13 @@ function animarCores(container, modo, duracao) {
                     corHex = getHexCor(corNome);
                 }
                 container.innerHTML = `
-                    <div class="resultado-cor animacao-selecao" style="background-color: ${corHex}; animation: selecaoPiscando 0.1s ease-in-out infinite;"></div>
-                    <div class="cor-nome">${corNome}</div>`;
+                    <div class="resultado-cor animacao-selecao" style="background-color: ${corHex};"></div>
+                    <div class="cor-nome">${corNome}</div>
+                `;
                 requestAnimationFrame(atualizar);
-            } else { resolve(); }
+            } else { 
+                resolve(); 
+            }
         }
         atualizar();
     });
@@ -226,7 +233,9 @@ function animarDadosGirando(container, quantidade, duracao) {
                 html += '</div>';
                 container.innerHTML = html;
                 requestAnimationFrame(atualizar);
-            } else { resolve(); }
+            } else { 
+                resolve(); 
+            }
         }
         atualizar();
     });

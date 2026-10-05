@@ -744,6 +744,27 @@ header p {
     50% { transform: scale(1.2); }
 }
 
+/* ========== RODAPÉ ========== */
+.app-footer {
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 40px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+.app-footer strong {
+    color: var(--tab-active);
+}
+
+.footer-license {
+    font-size: 0.8em;
+    margin-top: 8px;
+    opacity: 0.8;
+}
+
 /* Área de impressão */
 .area-impressao {
     display: none;
@@ -838,6 +859,7 @@ header p {
     }
 }
 
+/* ========== RESPONSIVO GERAL ========== */
 @media (max-width: 768px) {
     .container {
         padding: 60px 20px 20px;
@@ -928,5 +950,84 @@ header p {
     .spinner-large {
         width: 80px;
         height: 80px;
+    }
+}
+
+/* ========== CORREÇÃO MOBILE (Telas 6.0" a 6.9" / até 480px) ========== */
+@media (max-width: 480px) {
+    .container {
+        padding: 70px 15px 20px;
+        border-radius: 15px;
+    }
+
+    /* 1. Corrigir Globo do Bingo */
+    .globo-css-wrapper {
+        width: 260px;
+        height: 260px;
+    }
+    .globo-bola-sorteada {
+        width: 80px;
+        height: 80px;
+        bottom: 20px;
+    }
+    .bola-numero {
+        font-size: 2em;
+    }
+
+    /* 2. Corrigir Controles do Bingo (Empilhar botões) */
+    .form-group-inline {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    .form-group-inline input {
+        width: 100%;
+    }
+    .btn-bingo {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* 3. CORREÇÃO CRÍTICA: Quadro de Números do Bingo */
+    .quadro-colunas {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 6px;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .coluna-bingo {
+        min-width: 60px;
+        flex-shrink: 0;
+    }
+    
+    .coluna-titulo {
+        font-size: 1em;
+        padding: 8px 2px;
+    }
+    
+    .numeros-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .numero-bingo-item {
+        font-size: 0.75em;
+        aspect-ratio: auto;
+        padding: 6px 0;
+        border-radius: 4px;
+    }
+
+    /* 4. Ajustes gerais de texto */
+    header h1 {
+        font-size: 1.8em;
+    }
+    
+    .tab-btn {
+        font-size: 0.9em;
+        padding: 12px 8px;
     }
 }

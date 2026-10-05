@@ -14,7 +14,7 @@
                  Tema
             </button>
             <div class="dropdown-temas" id="dropdownMenuTema">
-                <button class="opcao-tema" data-tema="claro" onclick="mudarTema('claro')">☀️ Claro</button>
+                <button class="opcao-tema" data-tema="claro" onclick="mudarTema('claro')">️ Claro</button>
                 <button class="opcao-tema" data-tema="escuro" onclick="mudarTema('escuro')"> Escuro</button>
                 <button class="opcao-tema" data-tema="sistema" onclick="mudarTema('sistema')">💻 Sistema</button>
             </div>
@@ -206,6 +206,13 @@
 
     <!-- Área de impressão oculta -->
     <div id="area-impressao" class="area-impressao"></div>
+
+    <!-- Rodapé da Aplicação -->
+    <footer class="app-footer">
+        <p>Desenvolvido por <strong>Elias Dantas</strong></p>
+        <p>&copy; 2026 Sistema de Sorteios. Todos os direitos reservados.</p>
+        <p class="footer-license">Distribuído sob a licença MIT.</p>
+    </footer>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

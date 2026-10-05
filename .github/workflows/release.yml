@@ -4,60 +4,56 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
   auto-version:
     runs-on: ubuntu-latest
-    
-    # Só executa se o commit for de release ou bump
     if: contains(github.event.head_commit.message, 'release:') || contains(github.event.head_commit.message, 'bump')
     
     steps:
-      - name: Checkout do código
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Configurar Git
+      - name: Setup Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
       
-      - name: Detectar tipo de bump
+      - name: Detect bump type
         id: bump
         run: |
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          if [[ $COMMIT_MSG == *"BREAKING CHANGE"* ]] || [[ $COMMIT_MSG == *"!:"* ]]; then
+          MSG="${{ github.event.head_commit.message }}"
+          if echo "$MSG" | grep -q "BREAKING CHANGE\|!:"; then
             echo "type=major" >> $GITHUB_OUTPUT
-          elif [[ $COMMIT_MSG == *"feat:"* ]] || [[ $COMMIT_MSG == *"feature:"* ]]; then
+          elif echo "$MSG" | grep -q "feat:\|feature:"; then
             echo "type=minor" >> $GITHUB_OUTPUT
-          elif [[ $COMMIT_MSG == *"fix:"* ]] || [[ $COMMIT_MSG == *"bugfix:"* ]]; then
+          elif echo "$MSG" | grep -q "fix:\|bugfix:"; then
             echo "type=patch" >> $GITHUB_OUTPUT
           else
             echo "type=patch" >> $GITHUB_OUTPUT
           fi
       
-      - name: Mostrar tipo detectado
-        run: echo "Tipo de bump: ${{ steps.bump.outputs.type }}"
-      
       - name: Bump version
         id: version
         run: |
-          python scripts/bump_version.py ${{ steps.bump.outputs.type }}
-          NEW_VERSION=$(cat VERSION)
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "Versão atualizada para: $NEW_VERSION"
+          python3 scripts/bump_version.py ${{ steps.bump.outputs.type }}
+          echo "new_version=$(cat VERSION)" >> $GITHUB_OUTPUT
       
-      - name: Commitar nova versão
+      - name: Commit version
         run: |
           git add VERSION
-          git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}" || echo "No changes to commit"
+          git diff --staged --quiet || git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}"
       
-      - name: Criar tag
+      - name: Create tag
         run: |
           git tag -a v${{ steps.version.outputs.new_version }} -m "Release v${{ steps.version.outputs.new_version }}"
       
-      - name: Push para o repositório
+      - name: Push
         run: |
           git push origin main
           git push origin v${{ steps.version.outputs.new_version }}

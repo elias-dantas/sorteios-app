@@ -128,7 +128,7 @@ async function realizarSorteio(tipo) {
     }
 }
 
-// ========== ANIMAÇÃO DE NÚMEROS ==========
+// ========== ANIMAÇÕES ==========
 function animarNumerosRolagem(container, min, max, duracao) {
     return new Promise(resolve => {
         const inicio = Date.now();
@@ -146,7 +146,6 @@ function animarNumerosRolagem(container, min, max, duracao) {
     });
 }
 
-// ========== ANIMAÇÃO DE NOMES COM SPINNER ==========
 function animarNomesRolagem(container, nomesStr, duracao) {
     return new Promise(resolve => {
         const nomes = nomesStr.split('\n').filter(n => n.trim());
@@ -157,7 +156,6 @@ function animarNomesRolagem(container, nomesStr, duracao) {
             return; 
         }
         
-        // Mostra o spinner
         container.innerHTML = `
             <div class="spinner-container">
                 <div class="spinner spinner-large"></div>
@@ -165,14 +163,10 @@ function animarNomesRolagem(container, nomesStr, duracao) {
             </div>
         `;
         
-        // Aguarda a duração e resolve
-        setTimeout(() => {
-            resolve();
-        }, duracao);
+        setTimeout(() => { resolve(); }, duracao);
     });
 }
 
-// ========== ANIMAÇÃO DE CORES ==========
 function animarCoresRolagem(container, modo, duracao) {
     return new Promise(resolve => {
         const coresPredefinidas = ["Vermelho", "Verde", "Azul", "Amarelo", "Roxo", "Laranja", "Rosa", "Ciano", "Magenta", "Marrom", "Preto", "Branco", "Cinza"];
@@ -202,7 +196,6 @@ function animarCoresRolagem(container, modo, duracao) {
     });
 }
 
-// ========== ANIMAÇÃO DE DADOS ==========
 function animarDadosGirando(container, quantidade, duracao) {
     return new Promise(resolve => {
         const inicio = Date.now();
@@ -225,7 +218,6 @@ function animarDadosGirando(container, quantidade, duracao) {
     });
 }
 
-// ========== FUNÇÕES AUXILIARES ==========
 function getHexCor(nome) {
     const cores = {
         "Vermelho": "#FF0000", "Verde": "#00FF00", "Azul": "#0000FF",
@@ -279,18 +271,14 @@ function exibirResultado(resultado, tipo) {
     resultadoDiv.innerHTML = html;
 }
 
-// ========== GLOBO DE BINGO - GERAR BOLAS ==========
+// ========== GLOBO DE BINGO ==========
 function gerarBolasGlobo() {
     const container = document.getElementById('bolasContainer');
     if (!container) return;
     
     container.innerHTML = '';
     
-    const cores = [
-        '#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3',
-        '#f38181', '#aa96da', '#fcbad3', '#a8d8ea',
-        '#ff9a9e', '#fecfef', '#a18cd1', '#fbc2eb'
-    ];
+    const cores = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#95e1d3', '#f38181', '#aa96da', '#fcbad3', '#a8d8ea', '#ff9a9e', '#fecfef', '#a18cd1', '#fbc2eb'];
     
     for (let i = 0; i < 15; i++) {
         const bola = document.createElement('div');

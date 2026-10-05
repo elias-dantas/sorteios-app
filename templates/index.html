@@ -7,32 +7,31 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <!-- Wrapper que envolve tudo para alinhar rodapé com container -->
     <div class="page-wrapper">
         <div class="container">
             <!-- Menu de Temas Dropdown -->
             <div class="menu-tema-wrapper">
                 <button class="btn-tema-principal" id="btnMenuTema" onclick="toggleMenuTema(event)">
-                    🎨 Tema
+                    <span class="emoji">🎨</span> Tema
                 </button>
                 <div class="dropdown-temas" id="dropdownMenuTema">
-                    <button class="opcao-tema" data-tema="claro" onclick="mudarTema('claro')">☀️ Claro</button>
-                    <button class="opcao-tema" data-tema="escuro" onclick="mudarTema('escuro')">🌙 Escuro</button>
-                    <button class="opcao-tema" data-tema="sistema" onclick="mudarTema('sistema')">💻 Sistema</button>
+                    <button class="opcao-tema" data-tema="claro" onclick="mudarTema('claro')"><span class="emoji">☀️</span> Claro</button>
+                    <button class="opcao-tema" data-tema="escuro" onclick="mudarTema('escuro')"><span class="emoji">🌙</span> Escuro</button>
+                    <button class="opcao-tema" data-tema="sistema" onclick="mudarTema('sistema')"><span class="emoji"></span> Sistema</button>
                 </div>
             </div>
 
             <header>
-                <h1>🎲 Sistema de Sorteios</h1>
+                <h1><span class="emoji"></span> Sistema de Sorteios</h1>
                 <p>Escolha o tipo de sorteio e configure os parâmetros</p>
             </header>
 
             <nav class="tabs">
-                <button class="tab-btn active" data-tipo="numero" onclick="mudarTab('numero')">🔢 Números</button>
-                <button class="tab-btn" data-tipo="nomes" onclick="mudarTab('nomes')">👥 Nomes</button>
-                <button class="tab-btn" data-tipo="cores" onclick="mudarTab('cores')"> Cores</button>
-                <button class="tab-btn" data-tipo="dados" onclick="mudarTab('dados')">🎲 Dados</button>
-                <button class="tab-btn" data-tipo="bingo" onclick="mudarTab('bingo')">🎱 Bingo</button>
+                <button class="tab-btn active" data-tipo="numero" onclick="mudarTab('numero')"><span class="emoji">🔢</span> Números</button>
+                <button class="tab-btn" data-tipo="nomes" onclick="mudarTab('nomes')"><span class="emoji"></span> Nomes</button>
+                <button class="tab-btn" data-tipo="cores" onclick="mudarTab('cores')"><span class="emoji">🎨</span> Cores</button>
+                <button class="tab-btn" data-tipo="dados" onclick="mudarTab('dados')"><span class="emoji">🎲</span> Dados</button>
+                <button class="tab-btn" data-tipo="bingo" onclick="mudarTab('bingo')"><span class="emoji">🎱</span> Bingo</button>
             </nav>
 
             <div id="form-numero" class="form-container active">
@@ -53,7 +52,7 @@
                     <input type="checkbox" id="permitir-repeticao-num">
                     <label for="permitir-repeticao-num">Permitir repetição</label>
                 </div>
-                <button class="btn-sortear" onclick="realizarSorteio('numero')">🎰 Sortear</button>
+                <button class="btn-sortear" onclick="realizarSorteio('numero')"><span class="emoji">🎰</span> Sortear</button>
             </div>
 
             <div id="form-nomes" class="form-container">
@@ -71,7 +70,7 @@
                     <input type="checkbox" id="permitir-repeticao-nomes">
                     <label for="permitir-repeticao-nomes">Permitir repetição</label>
                 </div>
-                <button class="btn-sortear" onclick="realizarSorteio('nomes')">🎯 Sortear</button>
+                <button class="btn-sortear" onclick="realizarSorteio('nomes')"><span class="emoji">🎯</span> Sortear</button>
             </div>
 
             <div id="form-cores" class="form-container">
@@ -92,7 +91,7 @@
                     <label for="quantidade-cores">Quantidade:</label>
                     <input type="number" id="quantidade-cores" value="1" min="1">
                 </div>
-                <button class="btn-sortear" onclick="realizarSorteio('cores')"> Sortear</button>
+                <button class="btn-sortear" onclick="realizarSorteio('cores')"><span class="emoji">🎨</span> Sortear</button>
             </div>
 
             <div id="form-dados" class="form-container">
@@ -113,21 +112,21 @@
                     <label for="quantidade-dados">Quantidade de Dados:</label>
                     <input type="number" id="quantidade-dados" value="1" min="1" max="10">
                 </div>
-                <button class="btn-sortear" onclick="realizarSorteio('dados')">🎲 Rolar Dados</button>
+                <button class="btn-sortear" onclick="realizarSorteio('dados')"><span class="emoji">🎲</span> Rolar Dados</button>
             </div>
 
             <div id="form-bingo" class="form-container">
-                <h2>🎱 Bingo</h2>
+                <h2><span class="emoji"></span> Bingo</h2>
                 
                 <div class="bingo-controls">
                     <div class="form-group-inline">
                         <label for="qtd-cartelas">Qtd. Folhas:</label>
                         <input type="number" id="qtd-cartelas" value="1" min="1" max="10">
-                        <button class="btn-bingo" onclick="gerarEImprimirCartelas()">🎫 Gerar Cartelas</button>
+                        <button class="btn-bingo" onclick="gerarEImprimirCartelas()"><span class="emoji">🎫</span> Gerar Cartelas</button>
                     </div>
-                    <button class="btn-bingo" id="btnIniciarBingo" onclick="iniciarBingo()">▶️ Iniciar Bingo</button>
-                    <button class="btn-bingo" id="btnSortearBingo" onclick="sortearNumeroBingo()" disabled>🎱 Sortear Número</button>
-                    <button class="btn-bingo" onclick="reiniciarBingo()">🔄 Reiniciar</button>
+                    <button class="btn-bingo" id="btnIniciarBingo" onclick="iniciarBingo()"><span class="emoji">▶️</span> Iniciar Bingo</button>
+                    <button class="btn-bingo" id="btnSortearBingo" onclick="sortearNumeroBingo()" disabled><span class="emoji">🎱</span> Sortear Número</button>
+                    <button class="btn-bingo" onclick="reiniciarBingo()"><span class="emoji">🔄</span> Reiniciar</button>
                 </div>
                 
                 <div class="globo-bingo-container">
@@ -195,7 +194,7 @@
                 </div>
             </div>
 
-            <!-- RODAPÉ DENTRO DO CONTAINER -->
+            <!-- Rodapé -->
             <footer class="app-footer">
                 <div class="footer-content">
                     <p class="footer-dev">Desenvolvido por <strong>Elias Dantas</strong></p>

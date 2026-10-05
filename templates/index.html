@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Sorteios</title>
+    <title>Sistema de Sorteios v{{ app_version }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="application-version" content="{{ app_version }}">
 </head>
 <body>
     <div class="page-wrapper">
@@ -322,11 +323,15 @@
                 </div>
             </div>
 
-            <!-- Rodapé -->
+            <!-- Rodapé com versão -->
             <footer class="app-footer">
                 <div class="footer-content">
                     <p class="footer-dev">Desenvolvido por <strong>Elias Dantas</strong></p>
                     <p class="footer-copy">&copy; 2026 Sistema de Sorteios. Todos os direitos reservados.</p>
+                    <p class="footer-version">
+                        <span class="version-badge">v{{ app_version }}</span>
+                        <span class="build-info">Build {{ build_date }}</span>
+                    </p>
                     <p class="footer-license">Distribuído sob a licença MIT.</p>
                 </div>
             </footer>

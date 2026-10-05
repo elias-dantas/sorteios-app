@@ -1,15 +1,21 @@
 /* ========== RESET ========== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ========== CORREÇÃO DE EMOJIS ========== */
-h1, h2, h3, .tab-btn, .btn-sortear, .btn-bingo, .btn-tema-principal, .opcao-tema, .footer-dev {
-    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* ========== ÍCONES SVG ========== */
+.icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    vertical-align: middle;
+    display: inline-block;
 }
 
-.emoji {
-    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
-    display: inline-block;
+.icon-title {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
     vertical-align: middle;
+    display: inline-block;
 }
 
 /* ========== VARIÁVEIS HÍBRIDAS ========== */
@@ -140,6 +146,8 @@ body {
         5px 5px 10px var(--shadow-dark),
         -5px -5px 10px var(--shadow-light);
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
 }
 
 .btn-tema-principal:hover {
@@ -186,6 +194,8 @@ body {
         3px 3px 6px var(--shadow-dark),
         -3px -3px 6px var(--shadow-light);
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
 }
 
 .opcao-tema:hover {
@@ -215,6 +225,9 @@ header h1 {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 header p {
@@ -223,29 +236,29 @@ header p {
 }
 
 .tabs {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
     margin-bottom: 30px;
-    border-bottom: 1px solid var(--border-color);
-    flex-wrap: wrap;
 }
 
 .tab-btn {
-    flex: 1;
-    min-width: 120px;
-    padding: 15px;
+    padding: 15px 10px;
     border: none;
     background: var(--tab-inactive);
     color: var(--text-primary);
     cursor: pointer;
-    font-size: 1em;
+    font-size: 0.95em;
     font-weight: 600;
     transition: all 0.3s ease;
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
     backdrop-filter: blur(5px);
     box-shadow: 
         3px 3px 6px var(--shadow-dark),
         -3px -3px 6px var(--shadow-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .tab-btn:hover {
@@ -345,6 +358,9 @@ header p {
         -5px -5px 15px var(--shadow-light),
         0 5px 20px var(--glow);
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-sortear:hover {
@@ -542,33 +558,31 @@ header p {
     margin-top: 20px;
 }
 
-/* ========== BINGO CONTROLS CORRIGIDO ========== */
+/* ========== BINGO CONTROLS - GRID SIMÉTRICO ========== */
 .bingo-controls {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto repeat(4, 1fr);
     gap: 12px;
     margin-bottom: 30px;
-    align-items: stretch;
+    align-items: end;
 }
 
-.form-group-inline {
+.bingo-control-group {
     display: flex;
-    gap: 10px;
-    align-items: center;
-    flex: 1;
-    min-width: 280px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.form-group-inline label {
+.bingo-control-group label {
     margin-bottom: 0;
     white-space: nowrap;
     color: var(--text-primary);
     font-weight: 500;
+    font-size: 0.9em;
 }
 
-.form-group-inline input {
-    width: 70px;
+.bingo-control-group input {
+    width: 80px;
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -578,11 +592,10 @@ header p {
     box-shadow: 
         inset 2px 2px 5px var(--shadow-dark),
         inset -2px -2px 5px var(--shadow-light);
-    flex-shrink: 0;
 }
 
 .btn-bingo {
-    padding: 12px 18px;
+    padding: 12px 16px;
     background: var(--accent-gradient);
     color: white;
     border: none;
@@ -596,8 +609,10 @@ header p {
         0 5px 15px var(--glow);
     transition: all 0.3s ease;
     white-space: nowrap;
-    flex-shrink: 0;
-    min-width: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
 }
 
 .btn-bingo:hover:not(:disabled) {
@@ -984,7 +999,9 @@ header p {
     body { padding: 10px; }
     .container { padding: 60px 20px 20px; }
     header h1 { font-size: 2em; }
-    .tabs { flex-direction: column; }
+    .tabs { 
+        grid-template-columns: repeat(3, 1fr);
+    }
     .resultado-numero { font-size: 3em; }
     .dado-tradicional { width: 60px; height: 60px; padding: 6px; }
     .ponto-dado { width: 8px; height: 8px; }
@@ -1004,23 +1021,21 @@ header p {
     .spinner { width: 60px; height: 60px; border-width: 5px; }
     .spinner-large { width: 80px; height: 80px; }
     
-    /* Bingo controls mobile corrigido */
+    /* Bingo controls mobile */
     .bingo-controls {
-        flex-direction: column;
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
     
-    .form-group-inline {
-        width: 100%;
+    .bingo-control-group {
+        grid-column: 1 / -1;
         flex-direction: row;
-        flex-wrap: wrap;
-        min-width: 100%;
+        align-items: center;
     }
     
     .btn-bingo {
-        width: 100%;
-        text-align: center;
-        flex-shrink: 1;
+        min-height: 44px;
+        font-size: 0.85em;
     }
 }
 
@@ -1029,13 +1044,24 @@ header p {
     .globo-css-wrapper { width: 260px; height: 260px; }
     .globo-bola-sorteada { width: 80px; height: 80px; bottom: 20px; }
     .bola-numero { font-size: 2em; }
-    .form-group-inline {
+    
+    .tabs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .bingo-controls {
+        grid-template-columns: 1fr;
+    }
+    
+    .bingo-control-group {
         flex-direction: column;
         align-items: stretch;
-        gap: 15px;
     }
-    .form-group-inline input { width: 100%; }
-    .btn-bingo { width: 100%; text-align: center; }
+    
+    .bingo-control-group input {
+        width: 100%;
+    }
+    
     .quadro-colunas {
         display: flex;
         flex-direction: row;
@@ -1058,6 +1084,5 @@ header p {
         border-radius: 4px;
     }
     header h1 { font-size: 1.8em; }
-    .tab-btn { font-size: 0.9em; padding: 12px 8px; }
     .footer-content { font-size: 0.85em; }
 }

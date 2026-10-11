@@ -23,6 +23,16 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 \---
 
+## [1.0.1] - 2026-10-11
+
+### Corrigido
+- Bug na detecção de tema do sistema operacional
+- Tema "Sistema" agora detecta corretamente a preferência do SO
+- Adicionado listener para mudanças em tempo real do tema do sistema
+- Refatoração do gerenciamento de temas para evitar duplicação de código
+
+---
+
 \## [1.0.0] - 2026-10-05
 
 \### 🎉 Lançamento Inicial

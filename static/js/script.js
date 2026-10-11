@@ -12,11 +12,31 @@ document.addEventListener('click', function(event) {
     }
 });
 
-function mudarTema(tema) {
+function detectarTemaSistema() {
+    """Detecta a preferência de tema do sistema operacional"""
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'escuro';
+    }
+    return 'claro';
+}
+
+function aplicarTema(tema) {
+    """Aplica o tema corretamente ao body"""
     document.body.className = '';
+    
     if (tema === 'escuro') {
         document.body.classList.add('tema-escuro');
+    } else if (tema === 'sistema') {
+        // Detecta e aplica o tema do sistema
+        if (detectarTemaSistema() === 'escuro') {
+            document.body.classList.add('tema-escuro');
+        }
     }
+    // Se for 'claro', não adiciona nenhuma classe (tema padrão)
+}
+
+function mudarTema(tema) {
+    aplicarTema(tema);
     localStorage.setItem('tema', tema);
     atualizarSelecaoTema(tema);
     document.getElementById('dropdownMenuTema').classList.remove('visivel');
@@ -33,14 +53,18 @@ function atualizarSelecaoTema(tema) {
 
 function carregarTema() {
     const temaSalvo = localStorage.getItem('tema') || 'sistema';
-    if (temaSalvo === 'escuro') {
-        document.body.classList.add('tema-escuro');
-    } else if (temaSalvo === 'sistema') {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.classList.add('tema-escuro');
-        }
-    }
+    aplicarTema(temaSalvo);
     atualizarSelecaoTema(temaSalvo);
+}
+
+// Listener para mudanças em tempo real no tema do sistema
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        const temaSalvo = localStorage.getItem('tema') || 'sistema';
+        if (temaSalvo === 'sistema') {
+            aplicarTema('sistema');
+        }
+    });
 }
 
 // ========== GERENCIAMENTO DE TABS ==========
@@ -249,8 +273,8 @@ function exibirResultado(resultado, tipo) {
             const nomes = Array.isArray(resultado.resultado) ? resultado.resultado : [resultado.resultado];
             html = nomes.map(p => `
                 <div class="resultado-nome-item">
-                    <div class="resultado-nome-texto">🎉 ${p.nome}</div>
-                    ${p.telefone ? `<div class="resultado-telefone">📱 ${p.telefone}</div>` : ''}
+                    <div class="resultado-nome-texto"> ${p.nome}</div>
+                    ${p.telefone ? `<div class="resultado-telefone"> ${p.telefone}</div>` : ''}
                 </div>`).join('');
             break;
         case 'cores':

@@ -56,11 +56,20 @@ jobs:
           
           print('🎉 Todos os testes passaram!')
           "
+      
+      - name: 🧪 Executar testes com pytest
+        run: |
+          pip install pytest pytest-flask pytest-cov
+          pytest tests/ -v --tb=short
+      
+      - name: 📊 Gerar relatório de cobertura
+        run: |
+          pytest tests/ --cov=app --cov-report=term-missing
 
   deploy:
     name: 🚀 Deploy em Produção
     needs: test
-    runs-on: self-hosted  # ← MUDANÇA CRÍTICA
+    runs-on: self-hosted
     if: github.ref == 'refs/heads/main'
     
     steps:
@@ -77,7 +86,7 @@ jobs:
           cd /home/elias/projetos/sorteios_app
           
           # Backup da versão atual
-          echo " Criando backup..."
+          echo "📦 Criando backup..."
           tar -czf /tmp/sorteios-backup-$(date +%Y%m%d-%H%M%S).tar.gz . 2>/dev/null || true
           
           # Atualizar código
@@ -89,7 +98,7 @@ jobs:
           source venv/bin/activate
           
           # Instalar dependências
-          echo " Instalando dependências..."
+          echo "📦 Instalando dependências..."
           pip install --upgrade pip
           pip install -r requirements.txt
           

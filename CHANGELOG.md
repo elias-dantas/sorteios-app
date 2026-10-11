@@ -23,6 +23,18 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 \---
 
+## [1.1.0] - 2026-10-11
+
+### Adicionado
+- Suite de testes automatizados com pytest
+- Testes de rotas e endpoints da API
+- Testes de validações e edge cases
+- Job de testes no workflow de deploy
+- Relatório de cobertura de código
+- Dependências: pytest, pytest-flask, pytest-cov
+
+---
+
 ## [1.0.1] - 2026-10-11
 
 ### Corrigido

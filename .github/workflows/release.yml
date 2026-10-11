@@ -10,7 +10,9 @@ permissions:
 jobs:
   auto-version:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'release:') || contains(github.event.head_commit.message, 'bump')
+    
+    # Ignora commits feitos pelo próprio bot (evita loop infinito)
+    if: github.event.head_commit.author.username != 'github-actions[bot]'
     
     steps:
       - name: Checkout
@@ -21,39 +23,70 @@ jobs:
       
       - name: Setup Git
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
       
-      - name: Detect bump type
+      - name: Detect bump type from commit message
         id: bump
         run: |
           MSG="${{ github.event.head_commit.message }}"
-          if echo "$MSG" | grep -q "BREAKING CHANGE\|!:"; then
+          echo " Mensagem do commit: $MSG"
+          
+          # Detecta o tipo baseado no prefixo (Conventional Commits)
+          if echo "$MSG" | grep -qE "^(feat|feature)(\(.+\))?!:" || echo "$MSG" | grep -q "BREAKING CHANGE"; then
+            echo " BREAKING CHANGE detectado → MAJOR"
             echo "type=major" >> $GITHUB_OUTPUT
-          elif echo "$MSG" | grep -q "feat:\|feature:"; then
+          elif echo "$MSG" | grep -qE "^(feat|feature)(\(.+\))?:"; then
+            echo "🟢 feat detectado → MINOR"
             echo "type=minor" >> $GITHUB_OUTPUT
-          elif echo "$MSG" | grep -q "fix:\|bugfix:"; then
+          elif echo "$MSG" | grep -qE "^(fix|bugfix|hotfix)(\(.+\))?:"; then
+            echo "🟡 fix detectado → PATCH"
             echo "type=patch" >> $GITHUB_OUTPUT
+          elif echo "$MSG" | grep -qE "^(release|bump)(\(.+\))?:"; then
+            echo "🔵 release/bump detectado → MANUAL"
+            echo "type=manual" >> $GITHUB_OUTPUT
           else
-            echo "type=patch" >> $GITHUB_OUTPUT
+            echo "⚪ Nenhum prefixo relevante → SKIP"
+            echo "type=skip" >> $GITHUB_OUTPUT
           fi
       
+      - name: Show detected bump type
+        run: |
+          echo "Tipo detectado: ${{ steps.bump.outputs.type }}"
+      
+      - name: Skip if no relevant commit
+        if: steps.bump.outputs.type == 'skip'
+        run: |
+          echo "⏭️ Commit não requer bump de versão. Encerrando."
+      
       - name: Bump version
+        if: steps.bump.outputs.type != 'skip'
         id: version
         run: |
-          python3 scripts/bump_version.py ${{ steps.bump.outputs.type }}
-          echo "new_version=$(cat VERSION)" >> $GITHUB_OUTPUT
+          # Se for manual, usa o tipo padrão patch (ou pode ser customizado)
+          BUMP_TYPE="${{ steps.bump.outputs.type }}"
+          if [ "$BUMP_TYPE" = "manual" ]; then
+            BUMP_TYPE="patch"
+          fi
+          
+          echo "📦 Incrementando versão (tipo: $BUMP_TYPE)..."
+          python3 scripts/bump_version.py $BUMP_TYPE
+          
+          NEW_VERSION=$(cat VERSION)
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "✅ Nova versão: $NEW_VERSION"
       
-      - name: Commit version
+      - name: Commit and push version
+        if: steps.bump.outputs.type != 'skip'
         run: |
+          NEW_VERSION="${{ steps.version.outputs.new_version }}"
+          
           git add VERSION
-          git diff --staged --quiet || git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}"
-      
-      - name: Create tag
-        run: |
-          git tag -a v${{ steps.version.outputs.new_version }} -m "Release v${{ steps.version.outputs.new_version }}"
-      
-      - name: Push
-        run: |
+          git diff --staged --quiet || git commit -m "chore(release): bump version to $NEW_VERSION"
+          
+          git tag -a v$NEW_VERSION -m "Release v$NEW_VERSION"
+          
           git push origin main
-          git push origin v${{ steps.version.outputs.new_version }}
+          git push origin v$NEW_VERSION
+          
+          echo "🚀 Release v$NEW_VERSION publicado com sucesso!"

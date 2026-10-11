@@ -1,11 +1,14 @@
 # 🎲 Sistema de Sorteios
 
+[![Status](https://img.shields.io/badge/status-produção-green)](https://sorteios-app.onrender.com)
+[![Python](https://img.shields.io/badge/python-3.12+-blue)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/flask-3.0.0-lightgrey)](https://flask.palletsprojects.com/)
+[![License](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
+[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-orange)](.github/workflows/)
+
 Aplicação web completa para realização de sorteios randômicos com interface moderna, animações visuais e sistema de Bingo profissional.
 
-![Status](https://img.shields.io/badge/status-produção-green)
-![Python](https://img.shields.io/badge/python-3.12+-blue)
-![Flask](https://img.shields.io/badge/flask-3.0.0-lightgrey)
-![License](https://img.shields.io/badge/license-MIT-yellow)
+🌐 **Acesse online**: [https://sorteios-app.onrender.com](https://sorteios-app.onrender.com)
 
 ---
 
@@ -13,6 +16,7 @@ Aplicação web completa para realização de sorteios randômicos com interface
 
 - [Visão Geral](#visão-geral)
 - [Funcionalidades](#funcionalidades)
+- [Capturas de Tela](#capturas-de-tela)
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Instalação](#instalação)
@@ -20,48 +24,51 @@ Aplicação web completa para realização de sorteios randômicos com interface
 - [API Endpoints](#api-endpoints)
 - [Configuração de Produção](#configuração-de-produção)
 - [CI/CD com GitHub Actions](#cicd-com-github-actions)
-- [Domínio Local](#domínio-local)
-- [Troubleshooting](#troubleshooting)
+- [Versionamento](#versionamento)
+- [Documentação Adicional](#documentação-adicional)
+- [Contribuindo](#contribuindo)
 - [Licença](#licença)
 - [Autor](#autor)
 
 ---
 
-## 🎯 Visão Geral
+##  Visão Geral
 
 O **Sistema de Sorteios** é uma aplicação web full-stack desenvolvida em Python com Flask, projetada para realizar diversos tipos de sorteios com interface visual rica e animações. Ideal para eventos corporativos, jogos, reuniões, rifas e qualquer situação que necessite de seleção aleatória profissional.
 
 ### 🌟 Destaques
 
-- ✅ **5 tipos de sorteios** diferentes
-- ✅ **Sistema de Bingo completo** com globo animado
-- ✅ **Impressão profissional** de cartelas (4 por folha A4)
-- ✅ **Deploy automático** via CI/CD
+- ✅ **5 tipos de sorteios** diferentes (Números, Nomes, Cores, Dados, Bingo)
+- ✅ **Sistema de Bingo completo** com globo animado e impressão de cartelas
+- ✅ **Interface moderna** com layout híbrido (Glassmorphism + Neumorphism + Dark Premium)
 - ✅ **Temas adaptativos** (claro, escuro, sistema)
-- ✅ **100% responsivo** para mobile e desktop
+- ✅ **100% responsivo** para mobile, tablet e desktop
+- ✅ **Deploy automático** via CI/CD com GitHub Actions
+- ✅ **Versionamento SemVer** com Conventional Commits
+- ✅ **Código aberto** sob licença MIT
 
 ---
 
 ## ✨ Funcionalidades
 
-### 🔢 Sorteio de Números
+###  Sorteio de Números
 - Definição de intervalo personalizado (mínimo e máximo)
 - Quantidade de números a sortear
 - Opção de permitir ou bloquear repetição
 - Animação de rolagem por 3 segundos
 - Validação de parâmetros no backend e frontend
 
-###  Sorteio de Nomes
+### 👥 Sorteio de Nomes
 - Lista de participantes (nome e telefone opcional)
 - Formato flexível: `Nome - Telefone` ou apenas `Nome`
 - Quantidade a sortear
-- Animação de rolagem estilo "slot machine"
+- Animação com spinner de carregamento
 - Exibição do telefone do vencedor (se informado)
 
 ### 🎨 Sorteio de Cores
 - **3 modos disponíveis:**
   - 🎨 **Cores Predefinidas** (15 cores clássicas)
-  -  **RGB Aleatório** (qualquer cor do espectro)
+  - 🌈 **RGB Aleatório** (qualquer cor do espectro)
   - ✏️ **Cores Customizadas** (defina suas próprias cores)
 - Animação de seleção com efeito visual
 - Exibição do nome e código hexadecimal
@@ -98,11 +105,23 @@ O **Sistema de Sorteios** é uma aplicação web full-stack desenvolvida em Pyth
 - **Quantidade flexível:** 1 a 10 folhas por vez
 
 ### 🎨 Sistema de Temas
-- ☀️ **Claro** - Interface clara e clean
-- 🌙 **Escuro** - Interface escura para conforto visual
--  **Sistema** - Detecta automaticamente a preferência do SO
+- ☀️ **Claro** - Interface clara com gradiente colorido
+- 🌙 **Escuro** - Interface escura com glow roxo
+- 💻 **Sistema** - Detecta automaticamente a preferência do SO
 - **Persistência:** preferência salva no `localStorage`
 - **Transições suaves** entre temas
+
+---
+
+## 📸 Capturas de Tela
+
+> 💡 Acesse a aplicação em [https://sorteios-app.onrender.com](https://sorteios-app.onrender.com) para ver a interface em ação.
+
+### Tema Claro
+Interface com fundo gradiente animado (roxo, rosa, azul) e container com efeito de vidro fosco.
+
+### Tema Escuro
+Interface escura com fundo azul-marinho profundo e elementos com glow roxo/violeta.
 
 ---
 
@@ -127,480 +146,414 @@ O **Sistema de Sorteios** é uma aplicação web full-stack desenvolvida em Pyth
 |------------|--------|
 | Nginx | Reverse proxy e servidor web |
 | Systemd | Gerenciamento de serviços |
-| Git | Versionamento |
+| Git | Controle de versão |
 | GitHub Actions | CI/CD |
-| Self-hosted Runner | Deploy automático local |
+| Render.com | Hospedagem em nuvem |
 
 ---
 
 ##  Estrutura do Projeto
 
+sorteios\_app/
 
-sorteios_app/
-├── app.py # Aplicação Flask principal
-├── requirements.txt # Dependências Python
-├── README.md # Documentação
-── .gitignore # Arquivos ignorados pelo Git
 ├── .github/
+
 │ └── workflows/
+
 │ ├── deploy.yml # Workflow de deploy
-│ └── validate.yml # Workflow de validação
+
+│ └── release.yml # Workflow de versionamento
+
+├── docs/
+
+│ └── use\_sorteios.md # Guia do usuário
+
+├── scripts/
+
+│ └── bump\_version.py # Script de versionamento
+
 ├── sorteios/ # Pacote de lógica de sorteios
+
 │ ├── init.py
+
 │ ├── models.py # Classes de sorteio (OO)
+
 │ └── utils.py # Funções auxiliares
+
 ├── static/ # Arquivos estáticos
+
 │ ├── css/
+
 │ │ └── style.css # Estilos e animações
+
 │ └── js/
+
 │ └── script.js # Lógica frontend
-└── templates/ # Templates HTML
-└── index.html # Página principal (SPA)
 
+├── templates/ # Templates HTML
 
----
+│ └── index.html # Página principal (SPA)
 
-## 🚀 Instalação
+├── .gitignore # Arquivos ignorados pelo Git
 
-### Pré-requisitos
+├── .vscode/ # Configurações do VS Code
 
-- **Python 3.12** ou superior
-- **pip** (gerenciador de pacotes Python)
-- **Git** (controle de versão)
-- **Ubuntu 24.04** (recomendado para produção)
+├── app.py # Aplicação Flask principal
 
-### Ambiente de Desenvolvimento
+├── CHANGELOG.md # Histórico de mudanças
 
-```bash
-# 1. Clonar o repositório
-git clone https://github.com/elias-dantas/sorteios-app.git
-cd sorteios_app
+├── LICENSE # Licença MIT
 
-# 2. Criar ambiente virtual
-python3 -m venv venv
+├── README.md # Este arquivo
 
-# 3. Ativar ambiente virtual
-source venv/bin/activate
+├── requirements.txt # Dependências Python
 
-# 4. Instalar dependências
-pip install -r requirements.txt
+└── VERSION # Versão atual (SemVer)
 
-# 5. Executar em modo desenvolvimento
-python app.py
+123456789101112131415161718192021222324252627282930
 
 Acesse: http://localhost:5000
 
-🎮 Uso
+Uso
 
-Sorteio de Números
-Defina o valor mínimo (ex: 1)
-Defina o valor máximo (ex: 100)
-Escolha a quantidade de números
-Marque "Permitir repetição" se desejar
-Clique em 🎰 Sortear
+Para instruções detalhadas de uso, consulte o Guia do Usuário.
 
-👥 Sorteio de Nomes
+Resumo Rápido
 
-Insira os participantes (um por linha)
-Formato opcional: Nome - Telefone
+Acesse a aplicação no navegador
 
-   João - (11) 99999-9999
-   Maria - (11) 88888-8888
-   Pedro
-   Ana - (11) 77777-7777
+Escolha o tipo de sorteio nas abas superiores
 
-Defina a quantidade a sortear
-Clique em 🎯 Sortear
+Configure os parâmetros conforme necessário
 
-🎨 Sorteio de Cores
+Clique em "Sortear" e aguarde a animação
 
-Escolha o modo:
-Cores Predefinidas (15 cores clássicas)
-RGB Aleatório (qualquer cor)
-Cores Customizadas (digite suas cores)
-Se custom, insira as cores (uma por linha)
-Defina a quantidade
-Clique em 🎨 Sortear
+Veja o resultado na área inferior
 
-🎲 Sorteio de Dados
-
-Escolha o tipo de dado (D4 a D100)
-Defina a quantidade (1-10)
-Clique em 🎲 Rolar Dados
-A soma é exibida automaticamente (múltiplos dados)
-
-🎱 Bingo
-
-Gerar e Imprimir Cartelas
-Defina a quantidade de folhas (1-10)
-Clique em 🎫 Gerar Cartelas
-A janela de impressão abre automaticamente
-Selecione a impressora e imprima
-
-Jogar Bingo
-
-Clique em ▶️ Iniciar Bingo
-Clique em ** Sortear Número** para cada bola
-O globo gira por 3 segundos e revela o número
-O número é destacado no quadro B-I-N-G-O
-Use 🔄 Reiniciar para novo jogo
-
-API Endpoints
+🔌 API Endpoints
 
 GET /
+
 Renderiza a página inicial.
+
 POST /sortear/numero
+
 Sorteia números em um intervalo.
+
 Request:
 
-{
-  "minimo": 1,
-  "maximo": 100,
-  "quantidade": 1,
-  "permitir_repeticao": true
-}
+json
 
-Response:
-
-{
-  "sucesso": true,
-  "tipo": "numero",
-  "resultado": 42,
-  "detalhes": {
-    "intervalo": [1, 100],
-    "quantidade": 1,
-    "permitir_repeticao": true
-  }
-}
+1234
 
 POST /sortear/nomes
+
 Sorteia nomes de uma lista.
+
 Request:
 
-{
-  "nomes": "João - (11) 99999-9999\nMaria\nPedro",
-  "quantidade": 1,
-  "permitir_repeticao": false
-}
+json
 
-Response:
-
-{
-  "sucesso": true,
-  "tipo": "nomes",
-  "resultado": {
-    "nome": "João",
-    "telefone": "(11) 99999-9999"
-  },
-  "detalhes": {
-    "total_participantes": 3,
-    "quantidade": 1,
-    "permitir_repeticao": false
-  }
-}
+12345
 
 POST /sortear/cores
+
 Sorteia cores.
+
 Request:
 
-{
-  "modo": "predefinidas",
-  "quantidade": 1,
-  "cores_custom": null
-}
+json
+
+12345
 
 Modos disponíveis:
+
 "predefinidas" - 15 cores clássicas
+
 "rgb" - RGB aleatório
-"custom" - Cores customizadas (enviar array em cores_custom)
+
+"custom" - Cores customizadas (enviar array em cores\_custom)
+
 POST /sortear/dados
+
 Sorteia dados.
+
 Request:
 
-{
-  "tipo_dado": "d6",
-  "quantidade": 2
-}
+json
+
+1234
 
 Tipos disponíveis: d4, d6, d8, d10, d12, d20, d100
-POST /bingo/gerar-cartelas
-Gera cartelas de bingo.
-Request:
-
-{
-  "quantidade": 1
-}
-
-Response:
-
-{
-  "sucesso": true,
-  "cartelas": [
-    {
-      "B": [1, 5, 9, 12, 14],
-      "I": [16, 20, 23, 27, 30],
-      "N": [32, 35, 40, 44],
-      "G": [47, 50, 53, 57, 60],
-      "O": [62, 65, 69, 72, 75]
-    }
-  ],
-  "total_folhas": 1
-}
 
 POST /bingo/iniciar
-Inicia novo jogo de bingo.
-Response:
 
-{
-  "sucesso": true,
-  "mensagem": "Bingo iniciado!"
-}
+Inicia novo jogo de bingo.
 
 POST /bingo/sortear
+
 Sorteia próximo número do bingo.
+
+POST /bingo/gerar-cartelas
+
+Gera cartelas de bingo.
+
+Request:
+
+json
+
+123
+
+GET /api/version
+
+Retorna informações da versão atual.
+
 Response:
 
-{
-  "sucesso": true,
-  "resultado": {
-    "numero": 42,
-    "letra": "N",
-    "total_sorteados": 15,
-    "fim": false
-  },
-  "detalhes": {
-    "total_numeros": 75,
-    "numeros_sorteados": 15,
-    "restantes": 60
-  }
-}
+json
+
+1234
 
 🏭 Configuração de Produção
+
 1. Instalar Gunicorn
 
-source venv/bin/activate
-pip install gunicorn
+bash
 
-2. Criar Service do Systemd
+12
 
-sudo nano /etc/systemd/system/sorteios.service
+1. Criar Service do Systemd
 
-[Unit]
-Description=Sistema de Sorteios - Gunicorn
-After=network.target
+bash
 
-[Service]
-User=elias
-Group=www-data
-WorkingDirectory=/home/elias/projetos/sorteios_app
-Environment="PATH=/home/elias/projetos/sorteios_app/venv/bin"
-ExecStart=/home/elias/projetos/sorteios_app/venv/bin/gunicorn -w 4 -b 127.0.0.1:5000 app:app
-Restart=always
-RestartSec=5
+1
 
-[Install]
-WantedBy=multi-user.target
+ini
+
+123456789
 
 Ativar:
 
-sudo systemctl daemon-reload
-sudo systemctl enable sorteios
-sudo systemctl start sorteios
-sudo systemctl status sorteios
+bash
 
-3. Configurar Nginx
+1234
 
-sudo nano /etc/nginx/sites-available/sorteios
+1. Configurar Nginx
 
-server {
-    listen 80;
-    server_name sorteios.local www.sorteios.local 192.168.0.22;
+bash
 
-    location / {
-        proxy_pass http://127.0.0.1:5000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+1
 
-    location /static/ {
-        alias /home/elias/projetos/sorteios_app/static/;
-        expires 30d;
-        add_header Cache-Control "public, immutable";
-    }
-}
+nginx
+
+123456789
 
 Ativar:
 
-sudo ln -s /etc/nginx/sites-available/sorteios /etc/nginx/sites-enabled/
-sudo rm -f /etc/nginx/sites-enabled/default
-sudo nginx -t
-sudo systemctl restart nginx
+bash
 
-4. Configurar Firewall
+1234
 
-sudo ufw allow 22/tcp
-sudo ufw allow 80/tcp
-sudo ufw enable
+1. Configurar Firewall
+
+bash
+
+123
 
 🔄 CI/CD com GitHub Actions
-Arquitetura
-O projeto utiliza GitHub Actions com Self-Hosted Runner para deploy automático:
 
-[Desenvolvedor] 
-    ↓ git push
-[GitHub Repository]
-    ↓ trigger
-[GitHub Actions]
-    ├─ Job 1: Testes (ubuntu-latest)
-    └─ Job 2: Deploy (self-hosted runner)
-              ↓
-[Servidor Ubuntu 24.04]
-    ├─ git pull
-    ├─ pip install
-    └─ systemctl restart sorteios
-              ↓
-[sorteios.local] ✅
+O projeto utiliza GitHub Actions para automação de deploy e versionamento.
 
-Workflow de Deploy
+Workflows Disponíveis
 
-O arquivo .github/workflows/deploy.yml define dois jobs:
+deploy.yml - Deploy Automático
 
-1. ** Testes** (roda na nuvem GitHub):
-Instala dependências
-Valida imports
-Testa lógica de sorteios
-2. 🚀 Deploy em Produção (roda no servidor local):
-Cria backup da versão atual
-Atualiza código via git pull
-Instala dependências
-Reinicia o serviço
+Trigger: Push na branch main
 
-Configurar Self-Hosted Runner
+Jobs:
 
-# 1. Criar diretório
-mkdir -p ~/actions-runner && cd ~/actions-runner
+Testes - Valida imports e lógica de sorteios
 
-# 2. Baixar runner
-curl -o actions-runner-linux-x64-2.321.0.tar.gz -L \
-  https://github.com/actions/runner/releases/download/v2.321.0/actions-runner-linux-x64-2.321.0.tar.gz
+Deploy - Atualiza o servidor via self-hosted runner
 
-# 3. Extrair
-tar xzf ./actions-runner-linux-x64-2.321.0.tar.gz
+release.yml - Versionamento Automático
 
-# 4. Configurar (token obtido no GitHub)
-./config.sh --url https://github.com/elias-dantas/sorteios-app --token TOKEN
+Trigger: Push na branch main
 
-# 5. Instalar como service
-sudo ./svc.sh install
-sudo ./svc.sh start
-sudo ./svc.sh status
+Detecção: Conventional Commits
 
-Secrets Necessários
+Ações:
 
-Secret               | Valor
-DEPLOY_PATH          | /home/user/projetos/sorteios_app
+Detecta tipo de bump (major/minor/patch)
 
-🌐 Domínio Local
+Incrementa versão no arquivo VERSION
 
-Configurar Arquivo Hosts
-Windows (C:\Windows\System32\drivers\etc\hosts):
+Cria tag Git automaticamente
 
-192.168.0.22    sorteios.local    www.sorteios.local
+Faz push da tag
 
-Linux/Mac (/etc/hosts):
+Conventional Commits
 
-sudo nano /etc/hosts
-# Adicionar:
-192.168.0.22    sorteios.local    www.sorteios.local
+O versionamento automático segue o padrão Conventional Commits:
 
-Acesse: http://sorteios.local
+Prefixo
 
-🐛 Troubleshooting
+Tipo de Bump
 
-Service não inicia
+Exemplo
 
-# Ver logs
-sudo journalctl -u sorteios -f
+feat:
 
-# Verificar se porta está em uso
-sudo lsof -i :5000
+MINOR
 
-Nginx 502 Bad Gateway
+feat: adicionar sorteio de bingo
 
-# Verificar se Gunicorn está rodando
-sudo systemctl status sorteios
+fix:
 
-# Ver logs do Nginx
-sudo tail -f /var/log/nginx/error.log
+PATCH
 
-Permissões de arquivo
+fix: corrigir layout mobile
 
-sudo chmod -R 755 /home/elias/projetos/sorteios_app
-sudo chown -R elias:elias /home/elias/projetos/sorteios_app
-sudo usermod -a -G elias www-data
+feat!:
 
-Runner offline
+MAJOR
 
-cd ~/actions-runner
-sudo ./svc.sh status
-sudo ./svc.sh restart
+feat!: mudar API de sorteios
 
-📊 Comandos Úteis
+docs:
 
-# Gerenciar serviço
-sudo systemctl start sorteios
-sudo systemctl stop sorteios
-sudo systemctl restart sorteios
-sudo systemctl status sorteios
+Nenhum
 
-# Ver logs em tempo real
-sudo journalctl -u sorteios -f
+docs: atualizar README
 
-# Ver logs do Nginx
-sudo tail -f /var/log/nginx/access.log
-sudo tail -f /var/log/nginx/error.log
+chore:
 
-# Testar configuração Nginx
-sudo nginx -t
+Nenhum
 
-# Reiniciar Nginx
-sudo systemctl restart nginx
+chore: atualizar dependências
+
+Exemplo de Uso
+
+bash
+
+1234567891011121314
+
+Versionamento
+
+Este projeto utiliza Semantic Versioning (SemVer) no formato MAJOR.MINOR.PATCH:
+
+MAJOR: Mudanças incompatíveis (breaking changes)
+
+MINOR: Novas funcionalidades (compatíveis)
+
+PATCH: Correções de bugs
+
+Versão atual: Consulte o arquivo VERSION ou acesse /api/version.
+
+Para mais detalhes, consulte o CHANGELOG.md.
+
+📚 Documentação Adicional
+
+Documento
+
+Descrição
+
+Guia do Usuário
+
+Instruções detalhadas de uso
+
+CHANGELOG
+
+Histórico de mudanças por versão
+
+LICENSE
+
+Licença MIT completa
+
+🤝 Contribuindo
+
+Contribuições são bem-vindas! Siga estes passos:
+
+Fork o repositório
+
+Crie uma branch para sua feature (git checkout -b feature/AmazingFeature)
+
+Commit suas mudanças (git commit -m 'feat: add AmazingFeature')
+
+Push para a branch (git push origin feature/AmazingFeature)
+
+Abra um Pull Request
+
+Padrões de Commit
+
+Utilize Conventional Commits para que o versionamento automático funcione corretamente:
+
+feat: - Nova funcionalidade
+
+fix: - Correção de bug
+
+docs: - Documentação
+
+style: - Formatação
+
+refactor: - Refatoração
+
+test: - Testes
+
+chore: - Tarefas de manutenção
 
 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para detalhes.
 
+Resumo da Licença MIT:
+
+✅ Uso comercial permitido
+
+✅ Modificação permitida
+
+✅ Distribuição permitida
+
+✅ Uso privado permitido
+
+⚠️ Aviso de licença deve ser incluído
+
 👨‍💻 Autor
 
-Elias R. Dantas - Arquiteto Cloud & Dev. iniciante
+Elias Dantas - Desenvolvedor Full Stack
 
-📧 eliasrangel@hotmail.com
-🐙 GitHub: elias-dantas
+eliasrangel@hotmail.com
 
-🙏 Agradecimentos
+GitHub: elias-dantas
+
+Agradecimentos
 
 Desenvolvido com ❤️ usando Python, Flask e muito café ☕
 
-📝 Changelog
+📊 Status do Projeto
 
-v2.0.0 (2026-09-20)
+Componente
 
-✅ Sistema de Bingo completo
-✅ Geração e impressão de cartelas
-✅ Globo animado estilo grade metálica
-✅ CI/CD com GitHub Actions
-✅ Self-hosted runner
-✅ Deploy automático
+Status
 
-v1.0.0 (2026-09-15)
+Aplicação
 
-✅ Sorteio de números, nomes, cores e dados
-✅ Animações visuais
-✅ Temas claro, escuro e sistema
-✅ Interface responsiva
+✅ Produção
 
+CI/CD
 
+✅ Operacional
 
----
+Versionamento
+
+✅ Automático
+
+Documentação
+
+✅ Completa
+
+Testes
+
+✅ Passando
+
+© 2026 Sistema de Sorteios. Todos os direitos reservados.

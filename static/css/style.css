@@ -857,12 +857,6 @@ header p {
     letter-spacing: 0.5px;
 }
 
-.build-info {
-    font-size: 0.8em;
-    opacity: 0.7;
-    font-style: italic;
-}
-
 .footer-license {
     font-size: 0.8em;
     opacity: 0.85;

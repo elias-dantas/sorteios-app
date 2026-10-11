@@ -23,6 +23,19 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 \---
 
+## [1.2.0] - 2026-10-11
+
+### Adicionado
+- Suite completa de testes automatizados com pytest (31 testes passando)
+- Testes de rotas e endpoints da API (`tests/test_app.py`)
+- Testes de validações e edge cases (`tests/test_sorteios.py`)
+- Fixtures compartilhadas para configuração de testes (`tests/conftest.py`)
+- Job de testes automatizados no workflow de CI/CD (`.github/workflows/deploy.yml`)
+- Geração de relatório de cobertura de código com `pytest-cov`
+- Novas dependências de desenvolvimento: `pytest`, `pytest-flask`, `pytest-cov`
+
+---
+
 ## [1.1.1] - 2026-10-11
 
 ### Corrigido

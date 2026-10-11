@@ -17,11 +17,13 @@ class TestRotasPrincipais:
     def test_index_contem_abas(self, client):
         """Testa se a página inicial contém todas as abas"""
         response = client.get('/')
-        assert b'Números' in response.data
-        assert b'Nomes' in response.data
-        assert b'Cores' in response.data
-        assert b'Dados' in response.data
-        assert b'Bingo' in response.data
+        # Decodifica para UTF-8 para suportar caracteres acentuados
+        html = response.data.decode('utf-8')
+        assert 'Números' in html
+        assert 'Nomes' in html
+        assert 'Cores' in html
+        assert 'Dados' in html
+        assert 'Bingo' in html
     
     def test_api_version(self, client):
         """Testa o endpoint de versão"""
@@ -80,7 +82,7 @@ class TestSorteioNumeros:
         response = client.post('/sortear/numero',
             json={'minimo': 1, 'maximo': 100, 'quantidade': 0})
         
-        assert response.status_code == 200  # Flask aceita, mas retorna lista vazia
+        assert response.status_code == 200
 
 
 class TestSorteioNomes:
@@ -210,7 +212,6 @@ class TestBingo:
     
     def test_sortear_numero_bingo(self, client):
         """Testa sortear número no bingo"""
-        # Inicia o bingo primeiro
         client.post('/bingo/iniciar')
         
         response = client.post('/bingo/sortear')
@@ -230,7 +231,6 @@ class TestBingo:
         data = json.loads(response.data)
         assert len(data['cartelas']) == 2
         
-        # Verifica estrutura da cartela
         cartela = data['cartelas'][0]
         assert 'B' in cartela
         assert 'I' in cartela
@@ -238,7 +238,6 @@ class TestBingo:
         assert 'G' in cartela
         assert 'O' in cartela
         
-        # Verifica faixas de números
         assert all(1 <= n <= 15 for n in cartela['B'])
         assert all(16 <= n <= 30 for n in cartela['I'])
         assert all(31 <= n <= 45 for n in cartela['N'])

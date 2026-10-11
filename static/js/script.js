@@ -13,7 +13,7 @@ document.addEventListener('click', function(event) {
 });
 
 function detectarTemaSistema() {
-    """Detecta a preferência de tema do sistema operacional"""
+    // Detecta a preferência de tema do sistema operacional
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         return 'escuro';
     }
@@ -21,7 +21,7 @@ function detectarTemaSistema() {
 }
 
 function aplicarTema(tema) {
-    """Aplica o tema corretamente ao body"""
+    // Aplica o tema corretamente ao body
     document.body.className = '';
     
     if (tema === 'escuro') {
@@ -273,8 +273,8 @@ function exibirResultado(resultado, tipo) {
             const nomes = Array.isArray(resultado.resultado) ? resultado.resultado : [resultado.resultado];
             html = nomes.map(p => `
                 <div class="resultado-nome-item">
-                    <div class="resultado-nome-texto"> ${p.nome}</div>
-                    ${p.telefone ? `<div class="resultado-telefone"> ${p.telefone}</div>` : ''}
+                    <div class="resultado-nome-texto">${p.nome}</div>
+                    ${p.telefone ? `<div class="resultado-telefone">${p.telefone}</div>` : ''}
                 </div>`).join('');
             break;
         case 'cores':

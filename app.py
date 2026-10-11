@@ -3,7 +3,6 @@ Sistema de Sorteios - Aplicação Flask
 """
 import os
 import random
-from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
@@ -17,15 +16,10 @@ def get_version():
     except:
         return '1.0.0'
 
-def get_build_info():
-    return {
-        'app_version': get_version(),
-        'build_date': datetime.now().strftime('%d/%m/%Y %H:%M')
-    }
-
 @app.context_processor
-def inject_build_info():
-    return get_build_info()
+def inject_version():
+    """Disponibiliza apenas a versão para os templates"""
+    return {'app_version': get_version()}
 
 # ========== ESTADO DO BINGO ==========
 jogo_bingo_atual = {'numeros_sorteados': [], 'ativo': False}
@@ -171,6 +165,10 @@ def sortear_dados():
         if tipo_dado not in faces:
             return jsonify({'erro': 'Tipo de dado inválido'}), 400
         
+        # ✅ CORREÇÃO: Validação de quantidade de dados
+        if quantidade < 1 or quantidade > 10:
+            return jsonify({'erro': 'Quantidade deve ser entre 1 e 10'}), 400
+        
         num_faces = faces[tipo_dado]
         valores = [random.randint(1, num_faces) for _ in range(quantidade)]
         soma = sum(valores)
@@ -233,6 +231,10 @@ def bingo_gerar_cartelas():
         dados = request.json
         quantidade = int(dados.get('quantidade', 1))
         
+        # ✅ CORREÇÃO: Validação de quantidade de cartelas
+        if quantidade < 1 or quantidade > 10:
+            return jsonify({'erro': 'Quantidade deve ser entre 1 e 10'}), 400
+        
         cartelas = []
         for _ in range(quantidade):
             cartela = {
@@ -250,10 +252,9 @@ def bingo_gerar_cartelas():
 
 @app.route('/api/version', methods=['GET'])
 def api_version():
-    return jsonify(get_build_info())
+    return jsonify({'app_version': get_version()})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    print(f"\n🎲 Sistema de Sorteios v{get_version()}")
-    print(f"📅 Build: {datetime.now().strftime('%d/%m/%Y %H:%M')}\n")
+    print(f"\n🎲 Sistema de Sorteios v{get_version()}\n")
     app.run(host='0.0.0.0', port=port, debug=False)

@@ -23,6 +23,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 \---
 
+## [1.1.1] - 2026-10-11
+
+### Corrigido
+- Adicionada validação de quantidade (1-10) no endpoint /sortear/dados
+- Adicionada validação de quantidade (1-10) no endpoint /bingo/gerar-cartelas
+- Todos os 31 testes agora passam com sucesso
+
+---
+
 ## [1.1.0] - 2026-10-11
 
 ### Adicionado
